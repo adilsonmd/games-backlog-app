@@ -1,4 +1,3 @@
-import Cronograma from '@/Games/Cronograma.vue'
 import GameManager from '@/Games/GameManager.vue'
 import HomePage from '@/Games/HomePage.vue'
 import PlayGame from '@/Games/PlayGame.vue'
@@ -17,14 +16,9 @@ const router = createRouter({
     component: HomePage
   }, 
   {
-    name: "GameManager",
-    path: "/gamemanager",
+    name: "Biblioteca",
+    path: "/biblioteca",
     component: GameManager
-  },
-  {
-    name: "Cronograma",
-    path: "/cronograma",
-    component: Cronograma
   },
   {
     name: "PlayGame",

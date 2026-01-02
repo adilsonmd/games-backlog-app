@@ -23,74 +23,67 @@ const handleClose = () => {
 
 </script>
 <template>
-    <dialog ref="dialogRef" @close="handleClose" class="custom-modal">
-        <div v-if="isOpen" class="modal-content">
-
-            <header class="modal-header">
+    <dialog 
+        ref="dialogRef" 
+        @close="handleClose" 
+        class="rounded-xl shadow-2xl p-0 m-auto bg-[#1a1a1a] border border-gray-800 backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+    >
+        <div v-if="isOpen" class="w-full max-w-md flex flex-col text-gray-200">
+            
+            <header class="flex justify-between items-center px-5 py-4 border-b border-gray-800 bg-[#1a1a1a]">
                 <slot name="header">
-                    <h3>{{ title || 'Atenção' }}</h3>
+                    <h3 class="text-sm uppercase tracking-widest font-bold text-gray-400">
+                        {{ title || 'Atenção' }}
+                    </h3>
                 </slot>
-                <button @click="handleClose" class="close-btn">&times;</button>
+                <button 
+                    @click="handleClose" 
+                    class="text-gray-500 hover:text-white transition-colors leading-none text-2xl"
+                >
+                    &times;
+                </button>
             </header>
 
-            <section class="modal-body">
+            <section class="p-6 overflow-y-auto max-h-[70vh]">
                 <slot></slot>
             </section>
 
-            <footer class="modal-footer">
+            <footer class="flex justify-end items-center gap-3 px-5 py-4 border-t border-gray-800">
                 <slot name="footer">
-                    <button @click="handleClose">Fechar</button>
+                    <button 
+                        @click="handleClose" 
+                        class="px-4 py-2 rounded-md text-xs font-semibold text-gray-400 hover:bg-gray-800 transition-all"
+                    >
+                        Fechar
+                    </button>
                 </slot>
             </footer>
-
         </div>
     </dialog>
 </template>
 
 <style scoped>
-.custom-modal {
-    border: none;
-    border-radius: 8px;
-    padding: 0;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+/* Reset para o Dialog */
+dialog {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    outline: none;
+    min-width: 400px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-/* Estiliza o fundo escuro (backdrop) nativo */
-.custom-modal::backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(2px);
+/* Estilização do Backdrop (Fundo escurecido) */
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px); /* Efeito de vidro fosco no fundo */
 }
 
-.modal-content {
-    display: flex;
-    flex-direction: column;
+/* Animação simples de entrada */
+dialog[open] {
+    animation: fadeIn 0.3s ease-out;
 }
 
-.modal-header {
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f8f9fa;
-}
-
-.modal-body {
-    padding: 1.5rem;
-}
-
-.modal-footer {
-    padding: 1rem;
-    border-top: 1px solid #eee;
-    text-align: right;
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
 }
 </style>

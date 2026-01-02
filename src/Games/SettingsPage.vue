@@ -13,8 +13,11 @@ const psnSynced = ref(false);
 const isLoading = ref(false);
 const baseURL = 'http://localhost:3000/api';
 
+const listOfGames = ref([]);
+const gamesToSync = ref([]);
+
 const query = ref({
-    limit: 50,
+    limit: 5,
     page: 0,
     totalCount: 0,
     lastPage: false,
@@ -22,7 +25,7 @@ const query = ref({
 
 const modal = ref({
     isOpen: false,
-    title: 'List of games',
+    title: 'Sincronizar jogos',
 
 })
 
@@ -81,7 +84,8 @@ async function mapSteamToGameSchema(steamGames) {
         }
 
         try {
-            const response = await GamesService.create(gameSchema);
+            //const response = await GamesService.create(gameSchema);
+            listOfGames.value.push(gameSchema);
             console.log('Resposta do insert para:', g);
         } catch (error) {
             console.error('Erro ao inserir jogo:', g);
@@ -121,7 +125,8 @@ async function mapPsnToGameSchema(psnGames) {
         }
 
         try {
-            const response = await GamesService.create(gameSchema);
+            //const response = await GamesService.create(gameSchema);
+            listOfGames.value.push(gameSchema);
             console.log('Resposta do insert para:');
         } catch (error) {
             console.error('Erro ao inserir jogo:');
@@ -129,6 +134,28 @@ async function mapPsnToGameSchema(psnGames) {
     }
 }
 
+function addGameToList(game) {
+    if (!gamesToSync.value.includes(game)) {
+        gamesToSync.value.push(game);
+    } else {
+        gamesToSync.value = gamesToSync.value.filter(g => g !== game);
+    }
+}
+
+async function createGames() {
+    try {
+        if (!gamesToSync.value)
+            alert("Sem jogos para sincronizar");
+
+        for (let game of gamesToSync.value)
+        {
+            const response = await GamesService.create(game);
+            console.log('Jogo inserido com sucesso:', response.data);
+        }
+    } catch (error) {
+        console.error('Erro ao inserir jogo:', error);
+    }
+}
 
 onMounted(async () => {
     isLoading.value = true;
@@ -140,75 +167,81 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="container">
-        <h2>Sync account data</h2>
-        <div class="d-flex flex-row">
+    <div class="p-4">
+        <h2 class="text-2xl font-bold mb-4">Sync account data</h2>
+        <div class="flex flex-row space-x-4 mb-4">
 
+            <!--
+            <div class="form-floating mb-3">
+            <input 
+                type="password" 
+                class="w-full bg-gray-50 dark:bg-[#1e1e1e] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                value=".........."
+            >
+            <label class="text-gray-500 dark:text-gray-400">NPSSO</label>
+            </div>
+
+            <button class="flex items-center gap-2 bg-gray-100 dark:bg-[#252525] hover:bg-gray-200 dark:hover:bg-[#2d2d2d] border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md transition-all">
+            <i class="bi bi-steam"></i>
+            Sync Steam Account
+            </button>
+            -->
             <div class="form-group">
-                <button @click="syncSteam" class="btn btn-light" :disabled="isLoading">Sync Steam Account
-                    <span v-if="steamSynced" class="ms-1">✅</span>
-                    <span v-else class="ms-1">🔃</span>
+                <button @click="syncSteam" class="flex items-center gap-2 bg-gray-100 dark:bg-[#252525] hover:bg-gray-200 dark:hover:bg-[#2d2d2d] border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md transition-all" :disabled="isLoading">Sync Steam Account
+                    <span v-if="steamSynced" class="ml-2">✅</span>
+                    <span v-else class="ml-2"><i class="bi bi-arrow-repeat"></i></span>
                 </button>
             </div>
 
             <div class="form-group">
-                <button @click="syncPsn" class="btn btn-light" :disabled="isLoading">Sync Playstation Account
-                    <span v-if="psnSynced" class="ms-1">✅</span>
-                    <span v-else class="ms-1">🔃</span>
+                <button @click="syncPsn" class="flex items-center gap-2 bg-gray-100 dark:bg-[#252525] hover:bg-gray-200 dark:hover:bg-[#2d2d2d] border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md transition-all" :disabled="isLoading">Sync Playstation Account
+                    <span v-if="psnSynced" class="ml-2">✅</span>
+                    <span v-else class="ml-2"><i class="bi bi-arrow-repeat"></i></span>
                 </button>
             </div>
         </div>
 
-        <button @click="modal.isOpen = !modal.isOpen">Toggle modal</button>
+        <button @click="modal.isOpen = !modal.isOpen" class="bg-blue-500 text-white px-4 py-2 rounded">Toggle modal</button>
 
-        <MyModal :is-open="modal.isOpen" :title="modal.title" @close="modal.isOpen = false"></MyModal>
+        <MyModal :is-open="modal.isOpen" :title="modal.title" @close="modal.isOpen = false">
+            <slot>
+                 <template v-if="listOfGames">
+                    <div v-for="(game, index) in listOfGames" :key="index">
+                        <input type="checkbox" :id="'game-' + index" :value="game.steam_id || game.psn_id" @change="addGameToList(game)"/>
+                        <span class="font-medium">{{ game.titulo }}</span>
+                    </div>
+                 </template>
+                <input type="checkbox" name="" id="" value="Valor"/>
+            </slot>
+            <template #footer>
+                <button @click="modal.isOpen = false" class="bg-white text-blue px-4 py-2 rounded hover:bg-neutral-200">Fechar Modal</button>
+                <button @click="createGames()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Gravar</button>
+            </template>
+        </MyModal>
 
-        <hr />
-        <h2>Settings</h2>
+        <hr class="my-4" />
+        <h2 class="text-2xl font-bold mb-4">Settings</h2>
 
+        <!-- SETTINGS -->
         <template v-for="(setting, index) in allSettings" :key="index">
-            <div class="form-floating mb-1 input-container">
-                <input class="form-control" :id="'setting-' + index" :type="setting.visible ? 'text' : 'password'"
-                    readonly="true" disabled :value="setting.value">
-                <label :for="'setting-' + index">{{ setting.key }}</label>
+            <div class="flex flex-col mb-4">
+                <label :for="'setting-' + index" class="text-gray-500 dark:text-gray-400">{{ setting.key }}</label>
+                <div class="relative flex items-center">
+                    <input class="border rounded px-4 py-2 w-full" :id="'setting-' + index" :type="setting.visible ? 'text' : 'password'"
+                        readonly="true" disabled :value="setting.value">
 
-                <button type="button" class="btn-toggle" @click="toggleVisibility(setting)"
-                    title="Alternar Visibilidade">
-                    <span v-if="setting.visible">🔓</span>
-                    <span v-else>🔒</span>
-                </button>
+                    <button type="button" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-transparent border-none cursor-pointer z-10 text-xl hover:opacity-70"
+                        @click="toggleVisibility(setting)" title="Alternar Visibilidade">
+                        <span v-if="setting.visible"><i class="bi bi-eye-slash"></i></span>
+                        <span v-else><i class="bi bi-eye"></i></span>
+                    </button>
+                </div>
             </div>
         </template>
+        <!-- SETTINGS -->   
     </div>
 </template>
+
 <style scoped>
-.input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.btn-toggle {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    /* Garante que o botão fique acima do input */
-    padding: 5px;
-    font-size: 1.2rem;
-    transition: opacity 0.2s;
-}
-
-.btn-toggle:hover {
-    opacity: 0.7;
-}
-
-/* Ajuste para o padding do Bootstrap não deixar o texto bater no cadeado */
-.pe-5 {
-    padding-right: 3.5rem !important;
-}
+/* Removed old styles and replaced with Tailwind classes */
 </style>
