@@ -13,7 +13,7 @@ class GamesService {
                     limit: query.limit,
                     page: query.page,
                     q: query.search
-                }
+                },
             });
             
             games = response.data.games;

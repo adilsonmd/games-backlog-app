@@ -19,6 +19,17 @@ class SteamService {
             console.error(erro);
         }
     }
+
+    async getPlayerSummary() {
+        try {
+            const response = await axios.get(baseUrl + "/player");
+            return response.data;
+
+        }
+        catch (erro) {
+            console.error(erro);
+        }
+    }
 }
 
 export default new SteamService();

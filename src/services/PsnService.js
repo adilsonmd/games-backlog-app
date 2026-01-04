@@ -12,7 +12,8 @@ class PsnService {
                 params: {
                     limit: query.limit,
                     page: query.page,
-                }
+                },
+                     
             });
             
             games = response.data.data.purchasedTitlesRetrieve.games;
@@ -22,6 +23,17 @@ class PsnService {
             
             console.log("PsnService", query);
             return {games: games, queryReturn: query};
+        }
+        catch (erro) {
+            console.error(erro);
+        }
+    }
+
+    // TODO informação de 1 game específico pela PSN API
+    async getPlayerSummary() {
+        try {
+            const response = await axios.get(baseUrl + "/player-basic/me");
+            return response.data;
         }
         catch (erro) {
             console.error(erro);
