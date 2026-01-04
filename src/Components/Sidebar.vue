@@ -43,6 +43,16 @@ const isActive = (path) => route.path === path;
             <span class="text-sm font-medium">Biblioteca</span>
           </router-link>
         </li>
+        <li>
+          <router-link 
+            to="/wishlist" 
+            :class="[isActive('/wishlist') ? 'bg-gray-800 text-blue-400' : 'text-gray-400 hover:bg-gray-800/50 hover:text-gray-200']"
+            class="flex items-center gap-3 px-3 py-2 rounded-md no-underline transition-all group"
+          >
+            <i class="bi bi-star" :class="isActive('/wishlist') ? 'text-blue-400' : 'text-gray-500 group-hover:text-gray-300'"></i>
+            <span class="text-sm font-medium">Wishlist</span>
+          </router-link>
+        </li>
 
         
       </ul>

@@ -1,6 +1,7 @@
 import GameManager from '@/Games/GameManager.vue'
 import HomePage from '@/Games/HomePage.vue'
 import PlayGame from '@/Games/PlayGame.vue'
+import WishList from '@/Games/WishList.vue'
 
 import SteamGameDetail from '@/Games/SteamGameDetail.vue'
 import SettingsPage from '@/Games/SettingsPage.vue'
@@ -26,9 +27,9 @@ const router = createRouter({
     component: PlayGame
   },
   {
-    name: "SteamGame",
-    path: "/steam/:appId",
-    component: SteamGameDetail
+    name: "Wishlist",
+    path: "/wishlist",
+    component: WishList,
   },
   {
     name: "SettingsPage",

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const baseUrl = "http://localhost:3000/api/games";
+const baseUrl = "http://localhost:3000/api/images";
 
-class GamesService {
+class ImageService {
     
     async getAll(query) {
         try {
@@ -28,18 +28,6 @@ class GamesService {
         }
     }
 
-    async getById(id) {
-        try {
-            const response = await axios.get(baseUrl + `/${id}`);
-            
-            let games = response.data;
-            return games;
-        }
-        catch (erro) {
-            console.error(erro);
-        }
-    }
-
     async create(game) {
         try {
             const response = await axios.post(baseUrl, game);
@@ -50,22 +38,10 @@ class GamesService {
         }
     }
 
-    async update(id, game) {
+    async delete(id) {
         try {
-            const response = await axios.put(baseUrl + `/${id}`, game);
+            const response = await axios.delete(baseUrl + `/${id}`);
             return response;
-        } 
-        catch (erro) {
-            console.error(erro);
-        }
-    }
-
-    async getWishlist() {
-        try {
-            const response = await axios.get(baseUrl + `/wishlist/`);
-
-            let games = response.data;
-            return games;
         }
         catch (erro) {
             console.error(erro);
@@ -73,4 +49,4 @@ class GamesService {
     }
 }
 
-export default new GamesService();
+export default new ImageService();

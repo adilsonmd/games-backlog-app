@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 const props = defineProps(['query']);
-const emit = defineEmits(['paginationChanged', 'searchChanged']);
+const emit = defineEmits(['paginationChanged', 'search']);
 
 const searchQuery = ref('');
 
@@ -25,6 +25,14 @@ const showPsn =() => {
         searchQuery.value = 'psn:' + searchQuery.value;
     }
 }
+
+const showSwitch =() => {
+    if (searchQuery.value.includes('switch:')) {
+        searchQuery.value = searchQuery.value.replace('switch:', '');
+    } else {
+        searchQuery.value = 'switch:' + searchQuery.value;
+    }
+}
 const onSearch = () => {
     emit('search', searchQuery.value);
 }
@@ -35,6 +43,7 @@ const onSearch = () => {
   <div v-if="props.query" class="flex flex-col gap-4 bg-[#1a1a1a] p-4 rounded-t-lg border-x border-t border-gray-800">
     
     <div class="flex flex-wrap items-center gap-3">
+
       <div class="flex items-center flex-grow max-w-md bg-[#252525] border border-gray-700 rounded-md px-3 py-1.5 focus-within:border-blue-500 transition-all">
         <i class="bi bi-search text-gray-500 mr-2"></i>
         <input 
@@ -42,6 +51,7 @@ const onSearch = () => {
           type="text" 
           class="bg-transparent border-none outline-none text-sm text-gray-200 w-full placeholder-gray-600" 
           placeholder="Buscar pelo título..."
+          @keyup.enter="onSearch"
         />
       </div>
 
@@ -52,6 +62,9 @@ const onSearch = () => {
         <button @click="showPsn()" class="px-3 py-1 rounded text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition-colors border-l border-gray-700">
           <i class="bi bi-playstation"></i>
         </button>
+        <button @click="showSwitch()" class="px-3 py-1 rounded text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition-colors border-l border-gray-700">
+          <i class="bi bi-nintendo-switch"></i>
+        </button>
       </div>
 
       <select class="bg-[#252525] text-sm text-gray-300 border border-gray-700 rounded-md px-3 py-1.5 outline-none focus:border-gray-500">
@@ -61,7 +74,7 @@ const onSearch = () => {
       </select>
 
 
-      <button @click="onSearch"><i class="bi bi-search"></i></button>
+      <button @click="onSearch" class="flex bg-[#252525] rounded-md border border-gray-700 px-2.5 py-1.5"><i class="bi bi-search"></i></button>
     </div>
 
     <div class="flex items-center justify-between border-t border-gray-800 pt-3">

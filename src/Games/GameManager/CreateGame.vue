@@ -1,0 +1,181 @@
+<script setup>
+import { ref, watch} from "vue";
+import MyModal from "@/Components/MyModal.vue";
+import GamesService from '@/services/GamesService';
+
+const props = defineProps({
+    'isOpen': Boolean,
+    'title': { type: String, default: 'Criar Jogo' },
+    'mode': {
+        type: String,
+        default: 'create'
+    },
+    'gameId': {
+        type: [String, null],
+        default: null
+    }
+});
+
+const emit = defineEmits(['create-game', 'close']);
+
+const newGame = ref({
+    psn_id: null,
+    steam_id: null,
+    titulo: '',
+    statusCompra: 'Wishlist',
+    status: 'Backlog',
+    horasJogadas: 0,
+    plataformaAdquirida: [],
+    midiaDigital: false,
+    midiaFisica: false,
+});
+
+const handleCreateGame = () => {
+    emit('create-game', { ...newGame.value });
+};
+
+const handleEditGame = () => {
+    emit('edit-game', { ...newGame.value, id: props.gameId });
+};
+
+const handleClose = () => {
+    emit('close');
+};
+
+const getGameDetails = async () => {
+    try {
+        const gameDetails = await GamesService.getById(props.gameId);
+        newGame.value = { ...gameDetails };
+    } catch (error) {
+        console.log("Erro ao buscar detalhes do jogo: ", error);
+    }
+};
+
+watch(() => props.isOpen, (newVal) => {
+    if (newVal && props.mode === 'edit' && props.gameId) {
+        getGameDetails();
+    } else if (newVal && props.mode === 'create') {
+        newGame.value = {
+            psn_id: null,
+            steam_id: null,
+            titulo: '',
+            statusCompra: 'Wishlist',
+            status: 'Backlog',
+            horasJogadas: 0,
+            plataformaAdquirida: [],
+            midiaDigital: false,
+            midiaFisica: false,
+        };
+    }
+});
+</script>
+<template>
+
+    <MyModal :is-open="props.isOpen" :title="props.title" @close="handleClose()">
+        <slot>
+            <div class="flex flex-col gap-5 p-2 bg-[#1a1a1a]">
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">PSN ID
+                            <span><a href="https://serialstation.com/titles/" target="_blank"><i
+                                        class="bi bi-info-circle"></i></a></span>
+                        </label>
+                        <input v-model="newGame.psn_id" type="text" placeholder="Ex: 2841..."
+                            class="bg-[#252525] border border-gray-700 rounded-md px-3 py-2 text-sm text-gray-200 focus:border-blue-500 outline-none transition-all placeholder:text-gray-600">
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Steam
+                            ID</label>
+                        <input v-model="newGame.steam_id" type="text" placeholder="Ex: 7656..."
+                            class="bg-[#252525] border border-gray-700 rounded-md px-3 py-2 text-sm text-gray-200 focus:border-blue-500 outline-none transition-all placeholder:text-gray-600">
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Título do
+                        Jogo</label>
+                    <input v-model="newGame.titulo" type="text" placeholder="Digite o nome completo..."
+                        class="bg-[#252525] border border-gray-700 rounded-md px-3 py-2 text-sm text-gray-200 focus:border-blue-500 outline-none transition-all placeholder:text-gray-600">
+                </div>
+                <div class="flex flex-col gap-1.5">
+
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Estado</label>
+                    <select v-model="newGame.statusCompra"
+                        class="bg-[#252525] border border-gray-700 rounded-md px-3 py-2 text-sm text-gray-200 focus:border-blue-500 outline-none transition-all">
+                        <option value="Wishlist" selected>Wishlist</option>
+                        <option value="Pre-venda">Pré-venda</option>
+                        <option value="Adquirido">Adquirido</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-1.5">
+
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Estado</label>
+                    <select v-model="newGame.status"
+                        class="bg-[#252525] border border-gray-700 rounded-md px-3 py-2 text-sm text-gray-200 focus:border-blue-500 outline-none transition-all">
+                        <option value="Backlog" selected>Backlog</option>
+                        <option value="Jogando">Jogando</option>
+                        <option value="Pausado">Pausado</option>
+                        <option value="Finalizado">Finalizado</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Horas
+                        Jogadas</label>
+                    <input v-model.number="newGame.horasJogadas" type="number"
+                        class="w-32 bg-[#252525] border border-gray-700 rounded-md px-3 py-2 text-sm text-gray-200 focus:border-blue-500 outline-none transition-all">
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Plataformas
+                        Adquiridas</label>
+                    <div class="flex flex-wrap gap-2">
+                        <label v-for="plat in ['PS5', 'PC', 'SWITCH']" :key="plat" class="cursor-pointer">
+                            <input type="checkbox" :value="plat" v-model="newGame.plataformaAdquirida"
+                                class="hidden peer">
+                            <div
+                                class="px-3 py-1 rounded text-xs font-medium border border-gray-700 bg-[#252525] text-gray-400 peer-checked:bg-blue-900/30 peer-checked:text-blue-400 peer-checked:border-blue-500 hover:bg-gray-700 transition-all">
+                                {{ plat }}
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 mt-2">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" v-model="newGame.midiaDigital" class="hidden peer">
+                        <div
+                            class="w-8 h-4 bg-gray-700 rounded-full peer-checked:bg-blue-600 relative transition-all after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:w-3 after:h-3 after:rounded-full after:transition-all peer-checked:after:translate-x-4">
+                        </div>
+                        <span class="text-xs text-gray-400 font-medium group-hover:text-gray-200">Mídia
+                            Digital</span>
+                    </label>
+
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" v-model="newGame.midiaFisica" class="hidden peer">
+                        <div
+                            class="w-8 h-4 bg-gray-700 rounded-full peer-checked:bg-blue-600 relative transition-all after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:w-3 after:h-3 after:rounded-full after:transition-all peer-checked:after:translate-x-4">
+                        </div>
+                        <span class="text-xs text-gray-400 font-medium group-hover:text-gray-200">Mídia
+                            Física</span>
+                    </label>
+                </div>
+
+            </div>
+        </slot>
+
+        <template #footer>
+            <div class="flex gap-2">
+                <button @click="handleClose()"
+                    class="px-4 py-2 rounded text-xs font-medium text-gray-400 hover:bg-gray-800 transition-all">
+                    Cancelar
+                </button>
+                <button @click="props.mode === 'edit' ? handleEditGame() : handleCreateGame()"
+                    class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded text-xs font-bold shadow-lg shadow-blue-900/20 transition-all flex items-center gap-2">
+                    <i class="bi bi-plus-lg"></i> {{ props.mode === 'edit' ? 'Editar Jogo' : 'Criar Jogo' }}
+                </button>
+            </div>
+        </template>
+    </MyModal>
+</template>
