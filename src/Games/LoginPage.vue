@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
+import AuthService from '../services/AuthService';
 
 const router = useRouter();
 const username = ref('');
@@ -14,11 +14,9 @@ const handleLogin = async () => {
     error.value = '';
     
     try {
-        const response = await axios.post('http://localhost:3000/api/auth/login', {
-            username: username.value,
-            password: password.value
-        });
 
+        const response = await AuthService.login(username.value, password.value);
+     
         // Salva o token para usar nas próximas requisições
         localStorage.setItem('token', response.data.token);
         
