@@ -1,5 +1,5 @@
-# Estágio de Build
-FROM node:18-alpine as build-stage
+# Estágio de Build - ATUALIZADO PARA NODE 22
+FROM node:22-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
