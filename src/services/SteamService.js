@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = "http://localhost:3000/api/steam";
+const baseUrl = import.meta.env.VITE_API_URL + "/steam";
 
 
 class SteamService {

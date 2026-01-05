@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = "http://localhost:3000/api/images";
+const baseUrl = import.meta.env.VITE_API_URL + "/images";
 
 class ImageService {
     

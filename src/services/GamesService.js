@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const baseUrl = "http://localhost:3000/api/games";
+const baseUrl = import.meta.env.VITE_API_URL + "/games";
 
 class GamesService {
     
     async getAll(query) {
+        console.log("base url:", baseUrl);
         try {
             let games;
             

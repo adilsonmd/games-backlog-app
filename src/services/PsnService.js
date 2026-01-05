@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = "http://localhost:3000/api/psn";
+const baseUrl = import.meta.env.VITE_API_URL + "/psn";
 
 class PsnService {
     
