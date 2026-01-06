@@ -83,8 +83,8 @@ onMounted(async () => {
                     <div v-if="recentGames.length === 0"
                         class="flex flex-col items-center justify-center h-full text-gray-600">
                         <i
-                            class="bi bi-plus-circle text-2xl mb-2 opacity-50 group-hover:scale-110 transition-transform"></i>
-                        <p class="text-sm font-medium">Clique para adicionar o que está jogando</p>
+                            class="bi bi-clock-history text-2xl mb-2 opacity-50 group-hover:scale-110 transition-transform"></i>
+                        <p class="text-sm font-medium">Não está jogando no momento</p>
                     </div>
 
                     <div v-else class="flex flex-col gap-3">
