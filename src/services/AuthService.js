@@ -11,11 +11,8 @@ class AuthService {
                 password: password
             });
 
-            // Salva o token para usar nas próximas requisições
-            localStorage.setItem('token', response.data.token);
-
-            // Redireciona para a home ou wishlist
-            router.push('/biblioteca');
+            // Retorna a resposta completa para a página
+            return response;
         }
         catch (erro) {
             console.error(erro);

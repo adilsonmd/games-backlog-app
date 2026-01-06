@@ -14,16 +14,16 @@ const handleLogin = async () => {
     error.value = '';
     
     try {
-
         const response = await AuthService.login(username.value, password.value);
-     
-        // Salva o token para usar nas próximas requisições
-        localStorage.setItem('token', response.data.token);
         
-        // Redireciona para a home ou wishlist
-        router.push('/biblioteca');
+        // Agora 'response' existe e contém o que a API mandou (Status 200)
+        if (response && response.data.token) {
+            localStorage.setItem('token', response.data.token);
+            router.push('/biblioteca');
+        }
     } catch (err) {
-        error.value = err.response?.data?.error || 'Erro ao conectar ao servidor';
+        console.error("Erro no login:", err);
+        error.value = err.response?.data?.error || 'Usuário ou senha inválidos';
     } finally {
         isLoading.value = false;
     }
