@@ -1,17 +1,16 @@
 <script setup>
-import axios from "axios";
 import { onMounted, ref } from "vue";
 
 import PsnService from "@/services/PsnService";
 import SteamService from "@/services/SteamService";
 import GamesService from "@/services/GamesService";
+import SettingService from "@/services/SettingService";
 import MyModal from "@/Components/MyModal.vue";
 
 const allSettings = ref([]);
 const steamSynced = ref(false);
 const psnSynced = ref(false);
 const isLoading = ref(false);
-const baseURL = 'http://localhost:3000/api';
 
 const listOfGames = ref([]);
 const gamesToSync = ref([]);
@@ -30,7 +29,7 @@ const modal = ref({
 })
 
 const getAllSettings = async () => {
-    const response = await axios.get(baseURL + "/setting/")
+    const response = await SettingService.getAll();
 
     allSettings.value = response.data.map(item => ({
         ...item,
