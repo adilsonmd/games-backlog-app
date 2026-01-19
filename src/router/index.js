@@ -3,6 +3,7 @@ import WishList from '@/Games/WishList.vue'
 import LoginPage from '@/Games/LoginPage.vue'
 import HomePage from '@/Games/HomePage.vue'
 import GameManager from '@/Games/GameManager.vue'
+import NamoradaPage from '@/Games/NamoradaPage.vue'
 import SettingsPage from '@/Games/SettingsPage.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
@@ -32,6 +33,12 @@ const router = createRouter({
     name: "Wishlist",
     path: "/wishlist",
     component: WishList,
+    meta: { requiresAuth: true } // PRIVADO
+  },
+  {
+    name: "Namorada",
+    path: "/namorada",
+    component: NamoradaPage,
     meta: { requiresAuth: true } // PRIVADO
   },
   {

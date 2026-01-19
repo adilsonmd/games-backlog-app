@@ -37,17 +37,6 @@ const handleLogout = () => {
       <ul class="flex flex-col gap-1 p-0 list-none">
         <li>
           <router-link 
-            to="/play" 
-            :class="[isActive('/play') ? 'bg-gray-800 text-blue-400' : 'text-gray-400 hover:bg-gray-800/50 hover:text-gray-200']"
-            class="flex items-center gap-3 px-3 py-2 rounded-md no-underline transition-all group"
-          >
-            <i class="bi bi-play-circle-fill" :class="isActive('/play') ? 'text-blue-400' : 'text-gray-500 group-hover:text-gray-300'"></i>
-            <span class="text-sm font-medium">Jogar</span>
-          </router-link>
-        </li>
-
-        <li>
-          <router-link 
             to="/biblioteca" 
             :class="[isActive('/biblioteca') ? 'bg-gray-800 text-blue-400' : 'text-gray-400 hover:bg-gray-800/50 hover:text-gray-200']"
             class="flex items-center gap-3 px-3 py-2 rounded-md no-underline transition-all group"
@@ -65,6 +54,17 @@ const handleLogout = () => {
           >
             <i class="bi bi-star" :class="isActive('/wishlist') ? 'text-blue-400' : 'text-gray-500 group-hover:text-gray-300'"></i>
             <span class="text-sm font-medium">Wishlist</span>
+          </router-link>
+        </li>
+
+         <li>
+          <router-link 
+            to="/namorada" 
+            :class="[isActive('/namorada') ? 'bg-gray-800 text-blue-400' : 'text-gray-400 hover:bg-gray-800/50 hover:text-gray-200']"
+            class="flex items-center gap-3 px-3 py-2 rounded-md no-underline transition-all group"
+          >
+            <i class="bi bi-heart" :class="isActive('/namorada') ? 'text-blue-400' : 'text-gray-500 group-hover:text-gray-300'"></i>
+            <span class="text-sm font-medium">Namorada Hub</span>
           </router-link>
         </li>
       </ul>

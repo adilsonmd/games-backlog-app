@@ -20,6 +20,17 @@ class SteamService {
         }
     }
 
+    async getRecentPlayedGames() {
+        try {
+            const response = await axios.get(baseUrl + "/recent-games");
+            let games = response.data;
+            
+            return {games: games, queryReturn: query};
+        } catch (error) {
+            console.error(erro);
+        }
+    }
+
     async getPlayerSummary() {
         try {
             const response = await axios.get(baseUrl + "/player");

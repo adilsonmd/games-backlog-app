@@ -1,7 +1,8 @@
 <script setup>
-import { ref, watch} from "vue";
+import { ref, watch } from "vue";
 import MyModal from "@/Components/MyModal.vue";
 import GamesService from '@/services/GamesService';
+import IGDBService from "@/services/IGDBService";
 
 const props = defineProps({
     'isOpen': Boolean,
@@ -16,9 +17,14 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['create-game', 'close']);
+const emit = defineEmits(['create-game', 'edit-game', 'close']);
+const isIGDBModalOpen = ref(false);
+
+const igdbGames = ref([]);
+const selectedIGDBGame = ref({});
 
 const newGame = ref({
+    igdb_id: null,
     psn_id: null,
     steam_id: null,
     titulo: '',
@@ -51,11 +57,48 @@ const getGameDetails = async () => {
     }
 };
 
+const searchIGDBByTitle = async () => {
+    try {
+
+        isIGDBModalOpen.value = true;
+
+        if (!newGame.value.titulo || newGame.value.titulo.trim() === '') {
+            alert("Título do jogo está vazio. Não é possível buscar no IGDB.");
+            return;
+        }
+
+        const igdbData = await IGDBService.searchGame(newGame.value.titulo);
+        console.log("Dados IGDB encontrados: ", igdbData);
+
+        if (igdbData && igdbData.length > 0) {
+            //newGame.value.igdb_id = igdbData[0].id;
+            igdbGames.value = igdbData
+        } else {
+            alert("Nenhum jogo encontrado no IGDB com esse título.");
+        }
+
+    } catch (error) {
+        console.error("Erro ao buscar dados do IGDB: ", error);
+    }
+};
+
+const handleIGDBSelection = async () => {
+    if (!selectedIGDBGame.value) {
+        alert("Jogo não selecionado");
+        return;
+    }
+
+    console.log("Jogo IGDB selecionado: ", selectedIGDBGame.value);
+    newGame.value.igdb_id = selectedIGDBGame.value.id;
+    isIGDBModalOpen.value = false;
+}
+
 watch(() => props.isOpen, (newVal) => {
     if (newVal && props.mode === 'edit' && props.gameId) {
         getGameDetails();
     } else if (newVal && props.mode === 'create') {
         newGame.value = {
+            igdb_id: null,
             psn_id: null,
             steam_id: null,
             titulo: '',
@@ -76,6 +119,29 @@ watch(() => props.isOpen, (newVal) => {
             <div class="flex flex-col gap-5 p-2 bg-[#1a1a1a]">
 
                 <div class="grid grid-cols-2 gap-4">
+
+                    <!-- IGDB -->
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">
+                            IGDB ID
+                            <a href="https://serialstation.com/titles/" target="_blank"
+                                class="hover:text-blue-400 transition-colors">
+                                <i class="bi bi-info-circle ml-1"></i>
+                            </a>
+                        </label>
+
+                        <div class="flex items-stretch h-9">
+                            <input v-model="newGame.igdb_id" type="text" placeholder="0" disabled
+                                class="flex-1 bg-[#252525] border border-gray-700 border-r-0 rounded-l-md px-3 text-sm text-gray-400 outline-none cursor-not-allowed min-w-0">
+
+                            <button @click="searchIGDBByTitle" type="button"
+                                class="text-white px-4 rounded-r-md transition-all flex items-center justify-center border border-gray-700 active:scale-95"
+                                title="Sincronizar com IGDB">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- IGDB -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">PSN ID
                             <span><a href="https://serialstation.com/titles/" target="_blank"><i
@@ -177,5 +243,41 @@ watch(() => props.isOpen, (newVal) => {
                 </button>
             </div>
         </template>
+    </MyModal>
+
+
+    <MyModal :is-open="isIGDBModalOpen" @close="isIGDBModalOpen = false" :title="'Selecionar Jogo do IGDB'"
+        key="MODAL_IGDB">
+        <slot>
+            <div class="p-4">
+                <!-- Conteúdo do modal IGDB aqui -->
+
+                <!-- <div class="panel">
+                    <code rows="200" disabled>{{ JSON.stringify(igdbGames) }}</code>
+                </div> -->
+
+                <template v-if="igdbGames && igdbGames.length > 0">
+                    <ul>
+                        <li v-for="(game, index) in igdbGames" :key="'igdb-' + index">
+                            <input :id="'igdbcheck-' + game.id" type="radio" name="igdb-group" :value="game"
+                                v-model="selectedGame" class="w-4 h-4 cursor-pointer">
+                            <label :for="'igdbcheck-' + game.id" class="cursor-pointer select-none">
+                                {{ game.name }} -
+                                <span class="text-gray-400 text-xs">
+                                    ({{game.platforms.map(x => x.abbreviation).join(', ')}})
+                                </span>
+                            </label>
+                        </li>
+                    </ul>
+                </template>
+            </div>
+
+            <div class="flex flex-rol">
+                <button @click="handleIGDBSelection()"
+                    class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded text-xs font-bold shadow-lg shadow-blue-900/20 transition-all flex items-center gap-2">
+                    Selecionar Jogo
+                </button>
+            </div>
+        </slot>
     </MyModal>
 </template>

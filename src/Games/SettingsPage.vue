@@ -38,15 +38,31 @@ const getAllSettings = async () => {
 }
 
 const syncSteam = async () => {
-    const { games } = await SteamService.getOwnedGames(query.value);
-    await mapSteamToGameSchema(games);
-    steamSynced.value = true;
+
+    try {
+
+        const { games } = await SteamService.getOwnedGames(query.value);
+        await mapSteamToGameSchema(games);
+        steamSynced.value = true;
+
+        modal.value.isOpen = true;
+    } catch (error) {
+        alert(error);
+    }
 }
 
 const syncPsn = async () => {
-    const { games } = await PsnService.getOwnedGames(query.value);
-    await mapPsnToGameSchema(games);
-    psnSynced.value = true;
+    try {
+
+        const { games } = await PsnService.getOwnedGames(query.value);
+        await mapPsnToGameSchema(games);
+        psnSynced.value = true;
+
+        modal.value.isOpen = true;
+    } 
+    catch (error) {
+        alert(error);
+    }
 }
 
 const toggleVisibility = (setting) => {
@@ -77,7 +93,7 @@ async function mapSteamToGameSchema(steamGames) {
             titulo: g.name,
             statusCompra: 'Adquirido',
             urlImagem: `http://media.steampowered.com/steamcommunity/public/images/apps/${g.appid}/${g.img_icon_url}.jpg`,
-            horasJogadas: g.playtime_forever,
+            horasJogadas: (g.playtime_forever / 60) ?? 0,
             plataformaAdquirida: ['PC'],
             midiaDigital: true,
         }
@@ -156,6 +172,17 @@ async function createGames() {
     }
 }
 
+function closeModal() {
+    try {
+        listOfGames.value = [];
+        
+        modal.value.isOpen = false;
+
+    } catch (error) {
+        alert("[closeModal] ", error);
+    }
+}
+
 onMounted(async () => {
     isLoading.value = true;
 
@@ -168,23 +195,8 @@ onMounted(async () => {
 <template>
     <div class="p-4">
         <h2 class="text-2xl font-bold mb-4">Sync account data</h2>
+
         <div class="flex flex-row space-x-4 mb-4">
-
-            <!--
-            <div class="form-floating mb-3">
-            <input 
-                type="password" 
-                class="w-full bg-gray-50 dark:bg-[#1e1e1e] border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
-                value=".........."
-            >
-            <label class="text-gray-500 dark:text-gray-400">NPSSO</label>
-            </div>
-
-            <button class="flex items-center gap-2 bg-gray-100 dark:bg-[#252525] hover:bg-gray-200 dark:hover:bg-[#2d2d2d] border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md transition-all">
-            <i class="bi bi-steam"></i>
-            Sync Steam Account
-            </button>
-            -->
             <div class="form-group">
                 <button @click="syncSteam" class="flex items-center gap-2 bg-gray-100 dark:bg-[#252525] hover:bg-gray-200 dark:hover:bg-[#2d2d2d] border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md transition-all" :disabled="isLoading">Sync Steam Account
                     <span v-if="steamSynced" class="ml-2">✅</span>
@@ -200,9 +212,7 @@ onMounted(async () => {
             </div>
         </div>
 
-        <button @click="modal.isOpen = !modal.isOpen" class="bg-blue-500 text-white px-4 py-2 rounded">Toggle modal</button>
-
-        <MyModal :is-open="modal.isOpen" :title="modal.title" @close="modal.isOpen = false">
+        <MyModal :is-open="modal.isOpen" :title="modal.title" @close="closeModal">
             <slot>
                  <template v-if="listOfGames">
                     <div v-for="(game, index) in listOfGames" :key="index">
