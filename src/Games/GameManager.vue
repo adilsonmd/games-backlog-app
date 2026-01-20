@@ -174,6 +174,7 @@ watch(() => query.value.page, async (newPage) => {
 
         <ContentTable :table-details="{ columns: [
                 { name: 'Título' },
+                { name: 'Flags'},
                 { name: 'Horas Jogadas' },
                 { name: 'Plataformas' },
                 { name: 'Mídia' },

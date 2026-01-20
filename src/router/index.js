@@ -24,6 +24,12 @@ const router = createRouter({
     meta: { requiresAuth: true } // PRIVADO
   },
   {
+    name: "PlayGame",
+    path: "/play",
+    component: PlayGame,
+    meta: { requiresAuth: true } // PRIVADO
+  },
+  {
     name: "Biblioteca",
     path: "/biblioteca",
     component: GameManager,

@@ -34,6 +34,8 @@ const newGame = ref({
     plataformaAdquirida: [],
     midiaDigital: false,
     midiaFisica: false,
+    namorada_flag: false,
+    favorito_flag: false,
 });
 
 const handleCreateGame = () => {
@@ -93,6 +95,15 @@ const handleIGDBSelection = async () => {
     isIGDBModalOpen.value = false;
 }
 
+
+const flagGameForGirlfriend = async (game) => {
+  game.namorada_flag = !game.namorada_flag;
+}
+
+const flagGameForFavorite = (game) => {
+    game.favorito_flag = !game.favorito_flag;
+}
+
 watch(() => props.isOpen, (newVal) => {
     if (newVal && props.mode === 'edit' && props.gameId) {
         getGameDetails();
@@ -108,6 +119,8 @@ watch(() => props.isOpen, (newVal) => {
             plataformaAdquirida: [],
             midiaDigital: false,
             midiaFisica: false,
+            favorito_flag: false,
+            namorada_flag: false,
         };
     }
 });
@@ -197,7 +210,7 @@ watch(() => props.isOpen, (newVal) => {
                     <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Plataformas
                         Adquiridas</label>
                     <div class="flex flex-wrap gap-2">
-                        <label v-for="plat in ['PS5', 'PC', 'SWITCH']" :key="plat" class="cursor-pointer">
+                        <label v-for="plat in ['PS4', 'PS5', 'PC', 'SWITCH']" :key="plat" class="cursor-pointer">
                             <input type="checkbox" :value="plat" v-model="newGame.plataformaAdquirida"
                                 class="hidden peer">
                             <div
@@ -226,6 +239,18 @@ watch(() => props.isOpen, (newVal) => {
                         <span class="text-xs text-gray-400 font-medium group-hover:text-gray-200">Mídia
                             Física</span>
                     </label>
+                </div>
+
+                <div class="flex gap-6 mt-2">
+                    <button class="group font-medium cursor-pointer flex gap-1.5" @click="flagGameForGirlfriend(newGame)">
+                        <i class="bi text-pink-500" :class="newGame.namorada_flag ? 'bi-heart-fill' : 'bi-heart'"></i> 
+                        <span class="text-gray-400 group-hover:text-gray-200">Namorada</span>
+                    </button>
+
+                    <button class="group font-medium cursor-pointer flex gap-1.5" @click="flagGameForFavorite(newGame)">
+                        <i class="bi text-yellow-500" :class="newGame.favorito_flag ? 'bi-star-fill' : 'bi-star '"></i> 
+                        <span class="text-gray-400 group-hover:text-gray-200">Favorito</span>
+                    </button>
                 </div>
 
             </div>

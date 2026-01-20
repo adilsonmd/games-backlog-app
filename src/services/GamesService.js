@@ -72,6 +72,43 @@ class GamesService {
             console.error(erro);
         }
     }
+
+    async removeDuplicate() {
+        try {
+            const response = await axios.delete(baseUrl + '/');
+
+            let games = response.data;
+            return games;
+        } catch (erro) {
+            console.error(erro);
+        }
+    }
+
+    async getDashboardData() {
+        try {
+            const response = await axios.get(baseUrl + '/dashboard');
+
+            if (response.status == 200)
+                return response.data;
+
+            return null;
+        } catch (erro) {
+            console.error(erro);
+        }
+    }
+
+    async getPlayingGames() {
+        try {
+            const response = await axios.get(baseUrl + '/playing');
+
+            if (response.status == 200)
+                return response.data;
+
+            return null;
+        } catch (erro) {
+            console.error(erro);
+        }
+    }
 }
 
 export default new GamesService();

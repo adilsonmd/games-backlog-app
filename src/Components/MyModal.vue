@@ -21,12 +21,16 @@ const sizeClasses = computed(() => {
     return sizes[props.size] || sizes.medium;
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'confirm']);
 const dialogRef = ref(null);
 
 const handleClose = () => {
     emit('close');
 };
+
+const handleConfirm = () => {
+    emit('confirm');
+}
 
 watch(() => props.isOpen, async (newValue) => {
     // Aguarda o Vue renderizar o DOM antes de acessar o ref
@@ -77,6 +81,7 @@ watch(() => props.isOpen, async (newValue) => {
             <footer class="flex justify-end gap-3 px-5 py-4 border-t border-gray-800">
                 <slot name="footer">
                     <button @click="handleClose" class="px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 rounded">Fechar</button>
+                    <button @click="handleConfirm" class="px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 rounded">Confirmar</button>
                 </slot>
             </footer>
         </div>

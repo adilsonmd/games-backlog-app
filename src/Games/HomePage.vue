@@ -1,15 +1,49 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import SteamService from '@/services/SteamService';
 import PsnService from '@/services/PsnService';
+import GamesService from '@/services/GamesService';
 
-const stats = ref([
-    { label: 'Total de Jogos', value: 0, icon: 'bi-controller', color: 'text-blue-500' },
-    { label: 'Na Wishlist', value: 0, icon: 'bi-star', color: 'text-yellow-500' },
-    { label: 'Concluídos', value: 0, icon: 'bi-check-circle', color: 'text-green-500' },
-]);
+
 
 const recentGames = ref([]);
+
+const dashboardData = ref({
+    total: 0, finalizados: 0, wishlist: 0
+});
+
+const stats = computed(() => {
+    let dados = [
+        { label: 'Total de Jogos', value: getDashboardValue('total'), icon: 'bi-controller', color: 'text-blue-500' },
+        { label: 'Na Wishlist', value: getDashboardValue('wishlist'), icon: 'bi-star', color: 'text-yellow-500' },
+        { label: 'Concluídos', value: getDashboardValue('finalizados'), icon: 'bi-check-circle', color: 'text-green-500' },
+    ];
+
+    return dados;
+});
+
+const getDashboardValue = (propName) => {
+    return dashboardData.value[propName] ?? 0;
+}
+
+const getDashboardData = async () => {
+    try {
+        const data = await GamesService.getDashboardData();
+
+        if (!data) {
+            alert("não encontrado");
+            return;
+        }
+
+        dashboardData.value = data;
+
+    }
+    catch (erro) {
+        alert(erro);
+    }
+}
+
+
 
 const getSteamPlayerSummary = async () => {
     try {
@@ -42,6 +76,8 @@ const getPsnPlayerSummary = async () => {
 onMounted(async () => {
     // Aqui você chamaria sua API para preencher os dados
     // const response = await axios.get('/api/dashboard/summary');
+    await getDashboardData();
+
     await getSteamPlayerSummary();
     await getPsnPlayerSummary();
 });
@@ -103,7 +139,7 @@ onMounted(async () => {
                                     04/01/2026</span>
                             </div>
 
-                           
+
                         </div>
                     </div>
 

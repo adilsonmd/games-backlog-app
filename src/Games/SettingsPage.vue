@@ -25,8 +25,11 @@ const query = ref({
 const modal = ref({
     isOpen: false,
     title: 'Sincronizar jogos',
+});
 
-})
+const modalConfirmacao = ref({
+    isOpen: false,
+});
 
 const getAllSettings = async () => {
     const response = await SettingService.getAll();
@@ -63,6 +66,19 @@ const syncPsn = async () => {
     catch (error) {
         alert(error);
     }
+}
+
+const removeDuplicates = async() => {
+    try {
+
+        console.log("Removendo");
+        
+        const response = await GamesService.removeDuplicate();
+    }
+    catch (erro) {
+        
+    }
+
 }
 
 const toggleVisibility = (setting) => {
@@ -105,9 +121,7 @@ async function mapSteamToGameSchema(steamGames) {
         } catch (error) {
             console.error('Erro ao inserir jogo:', g);
         }
-
     }
-
 }
 
 /**
@@ -183,6 +197,9 @@ function closeModal() {
     }
 }
 
+function openModalConfirmacao() {
+    modalConfirmacao.value.isOpen = true;
+}
 onMounted(async () => {
     isLoading.value = true;
 
@@ -208,6 +225,12 @@ onMounted(async () => {
                 <button @click="syncPsn" class="flex items-center gap-2 bg-gray-100 dark:bg-[#252525] hover:bg-gray-200 dark:hover:bg-[#2d2d2d] border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md transition-all" :disabled="isLoading">Sync Playstation Account
                     <span v-if="psnSynced" class="ml-2">✅</span>
                     <span v-else class="ml-2"><i class="bi bi-arrow-repeat"></i></span>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <button @click="openModalConfirmacao" class="flex items-center gap-2 bg-gray-100 dark:bg-[#252525] hover:bg-gray-200 dark:hover:bg-[#2d2d2d] border border-gray-300 dark:border-gray-700 px-4 py-2 rounded-md transition-all">
+                    Remover Duplicados
                 </button>
             </div>
         </div>
@@ -248,6 +271,13 @@ onMounted(async () => {
             </div>
         </template>
         <!-- SETTINGS -->   
+
+        <MyModal title="Confirmar" 
+                :is-open="modalConfirmacao.isOpen" 
+                @confirm="removeDuplicates" 
+                @close="modalConfirmacao.isOpen = false" key="modal-confirmacao-01">
+            Deseja Excluir os duplicados?<br/> Não é possível desfazer essa ação
+        </MyModal>
     </div>
 </template>
 

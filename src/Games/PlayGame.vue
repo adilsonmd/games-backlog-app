@@ -1,5 +1,6 @@
 <script setup>
 
+import GamesService from '@/services/GamesService';
 import { onMounted, ref, watch } from 'vue';
 
 const listOfGames = ref([]);
@@ -11,9 +12,6 @@ const elapsedPausedTime = ref(0);
 
 const toggleCount = () => {
     isCounting.value = !isCounting.value;
-    console.log("Toggle", isCounting.value);
-
-
 };
 
 function formatTime(ms) {
@@ -67,28 +65,66 @@ function resetStopwatch() {
 
     elapsedPausedTime.value = 0;
     display.value = "00:00:00";
-
-
 }
 
+const getPlayingGame = async () => {
+    try {
+        const response = await GamesService.getPlayingGames();
 
-onMounted(() => {
-    listOfGames.value = JSON.parse(localStorage.getItem("GAMELIST")) ?? [];
+        if (!response) {
+            alert("Não encontrado");
+            return;
+        }
+
+        listOfGames.value = response;
+    }
+    catch (error) {
+        alert(error);
+    }
+}
+
+onMounted(async () => {
+    await getPlayingGame();
 });
 
 </script>
 <style sccope></style>
 <template>
 
-    <div class="container">
-        <div id="stopwatch-display">{{ display }}</div>
+    <div class="grid grid-cols-2 gap-4 p-4">
 
-        <div class="d-flex flex-row">
+        <template v-for="(game, index) in listOfGames">
 
-            <button class="btn btn-primary" id="start-btn" @click="startStopwatch">Iniciar</button>
-            <button class="btn btn-secondary" id="stop-btn" @click="stopStopwatch">Parar</button>
-            <button class="btn btn-secondary" id="reset-btn" @click="resetStopwatch">Resetar</button>
-        </div>
+            <div
+                class="bg-[#1a1a1a] rounded-xl overflow-hidden border border-gray-800 hover:border-blue-500 transition-all group">
+                <div class="relative h-48">
+                    <img :src="game?.fotos?.find(x => x.isCover === true)?.url ?? ''"
+                        class="w-full h-full object-cover">
+                    <div
+                        class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10">
+                        {{ game.plataformaAdquirida }}
+                    </div>
+                </div>
+
+                <div class="p-4">
+                    <h3 class="font-bold text-gray-100 truncate">{{ game.titulo }}</h3>
+
+                    <div class="flex items-center justify-between mt-3 text-gray-500">
+                        <div class="flex items-center gap-1.5">
+                            <i class="bi bi-calendar-event text-blue-500"></i>
+                            <span class="text-[11px]">Iniciado em 12/10/25</span>
+                        </div>
+                        <div class="text-[11px] tracking-tighter font-semibold text-gray-400">
+                            Tempo de jogo: 50h
+                        </div>
+                        <div class="text-[11px] uppercase tracking-tighter font-semibold text-gray-400">
+                            JRPG
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
     </div>
+
 
 </template>
