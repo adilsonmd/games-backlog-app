@@ -56,58 +56,107 @@ onMounted(async () => {
 <template>
 
     <div v-if="game" class="p-4">
-        <h2 class="text-xl">Game - {{ game.titulo }}</h2>
+        <h2 class="text-xl font-semibold text-gray-400">Game - {{ game.titulo }}</h2>
 
         <section>
 
-            <div class="border rounded px-2 py-1">
-                <span v-if="game.namorada_flag"><i class="text-pink-500 bi bi-heart-fill"></i></span>
-                <span v-if="game.favorito_flag"><i class="text-yellow-500 bi bi-star-fill"></i></span>
-            </div>
 
-            <div class="my-4 flex gap-2">
-                <div>
-                    <p>Horas jogadas: </p>
-                    <p>Plataformas:</p>
-                    <p>Midias:</p>
 
-                    <p>Compra:</p>
-                    <p>Status:</p>
+            <div class="flex flex-row">
+
+
+                <div class="my-4 flex flex-col gap-4">
+
+                    <div class="grid grid-cols-[150px_1fr] items-center group">
+                        <div class="flex items-center gap-2 text-gray-500 text-sm">
+                            <i class="bi bi-list-ul w-4"></i>
+                            <span>Plataforma</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <span v-for="plat in game.plataformaAdquirida" :key="plat"
+                                class="bg-[#2a2a2a] text-gray-300 px-2 py-0.5 rounded text-xs font-medium border border-gray-700">
+                                {{ plat }}
+                            </span>
+                            <span v-if="!game.plataformaAdquirida?.length"
+                                class="text-gray-600 italic text-sm">Empty</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-[150px_1fr] items-center">
+                        <div class="flex items-center gap-2 text-gray-500 text-sm">
+                            <i class="bi bi-disc w-4"></i>
+                            <span>Mídias</span>
+                        </div>
+                        <template v-if="game.isMidiaFisica || game.isMidiaDigital">
+                            <span class="text-gray-300 text-sm">{{ game.isMidiaFisica ? 'Fisica' : '' }}</span>
+                            <span class="text-gray-300 text-sm">{{ game.isMidiaDigital ? 'Digital' : '' }}</span>
+                        </template>
+                        <span v-else class="text-gray-600 italic text-sm">Empty</span>
+
+                    </div>
+
+                    <div class="grid grid-cols-[150px_1fr] items-center">
+                        <div class="flex items-center gap-2 text-gray-500 text-sm">
+                            <i class="bi bi-hash w-4"></i>
+                            <span>Horas Jogadas</span>
+                        </div>
+                        <span class="text-gray-300 text-sm">{{ game.horasJogadas || '0' }}</span>
+                    </div>
+
+
+
+                    <div class="grid grid-cols-[150px_1fr] items-center">
+                        <div class="flex items-center gap-2 text-gray-500 text-sm">
+                            <i class="bi bi-cart3 w-4"></i>
+                            <span>Aquisição</span>
+                        </div>
+                        <div class="flex">
+                            <span
+                                class="bg-blue-900/30 text-blue-400 px-3 py-0.5 rounded-full text-xs flex items-center gap-1.5 border border-blue-800/50">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                {{ game.statusCompra }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-[150px_1fr] items-center">
+                        <div class="flex items-center gap-2 text-gray-500 text-sm">
+                            <i class="bi bi-brightness-high w-4"></i>
+                            <span>Conclusão</span>
+                        </div>
+                        <div class="flex">
+                            <span
+                                class="bg-[#373737] text-gray-300 px-3 py-0.5 rounded-full text-xs flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+                                {{ game.status || 'Não iniciei' }}
+                            </span>
+                        </div>
+                    </div>
+
                 </div>
-                <div>
-                    <div class="block">
-                        <p>{{ game.horasJogadas }}</p>
-                    </div>
-                    <div class="block">
-                        <p>{{ game.plataformaAdquirida.join(',') || "Nenhuma" }}</p>
-                    </div>
-                    <div>
-                        <span v-if="game.midiaFisica"><i class="bi bi-disk"></i></span>
-                        <span v-else-if="game.midiaDigital"><i class="bi bi-cloudy"></i></span>
-                        <span v-else><i class="bi bi-dash-circle text-red-100"></i></span>
-                    </div>
-                    <div>
+                <div class="my-4 flex flex-col gap-4">
 
-                        <p>{{ game.statusCompra }}</p>
+                    <div class="grid grid-cols-[150px_1fr] items-center group">
+                        <div class="flex items-center gap-2 text-gray-500 text-sm">
+                            <i class="bi bi-flag w-4"></i>
+                            <span>Flags</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="text-pink-500" v-if="game.namorada_flag"><i class="bi bi-heart-fill"></i></span>
+                            <span class="text-yellow-500" v-if="game.favorito_flag"><i class="bi bi-star-fill"></i></span>
+                        </div>
                     </div>
-
-                    <div>
-                        <p>{{ game.status }}</p>
-                    </div>
-
                 </div>
-
             </div>
-
         </section>
 
         <section id="gallery-section">
-            <div>
+            <div class="my-3">
                 <GaleryComponent :game-id="game._id" @image-added="handleImageAdded"></GaleryComponent>
             </div>
         </section>
         <section id="comment-section ">
-            <div class="p-4">
+            <div class="my-3">
                 <ComentaryComponent :game-id="game._id"></ComentaryComponent>
             </div>
 

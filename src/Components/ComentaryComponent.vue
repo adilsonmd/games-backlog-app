@@ -49,7 +49,7 @@ onMounted(async () => {
 <template>
 
     <div class="space-y-4">
-        <h3 class="text-sm font-semibold text-gray-400">Comentários</h3>
+        <h3 class="text-xl font-semibold text-gray-400">Comentários</h3>
         <div class="flex gap-3">
             <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-orange-400 to-yellow-200 flex-shrink-0">
             </div>
