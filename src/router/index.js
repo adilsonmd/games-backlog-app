@@ -1,7 +1,8 @@
+import GamePage from '@/Games/GamePage.vue'
 import PlayGame from '@/Games/PlayGame.vue'
 import WishList from '@/Games/WishList.vue'
-import LoginPage from '@/Games/LoginPage.vue'
 import HomePage from '@/Games/HomePage.vue'
+import LoginPage from '@/Games/LoginPage.vue'
 import GameManager from '@/Games/GameManager.vue'
 import NamoradaPage from '@/Games/NamoradaPage.vue'
 import SettingsPage from '@/Games/SettingsPage.vue'
@@ -33,6 +34,12 @@ const router = createRouter({
     name: "Biblioteca",
     path: "/biblioteca",
     component: GameManager,
+    meta: { requiresAuth: true } // PRIVADO
+  },
+  {
+    name: "GamePage",
+    path: "/biblioteca/:id",
+    component: GamePage,
     meta: { requiresAuth: true } // PRIVADO
   },
   {

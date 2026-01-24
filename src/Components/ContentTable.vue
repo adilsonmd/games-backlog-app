@@ -35,7 +35,10 @@ const handleEdit = (game) => {
 
                 <tr v-for="(game, index) in props.tableDetails.data" :key="index"
                     class="hover:bg-gray-50 dark:hover:bg-[#1e1e1e] transition-colors">
-                    <td class="px-4 py-3 font-medium">{{ game.titulo }}</td>
+                    <td class="px-4 py-3 font-medium">
+                        <router-link :to="'/biblioteca/' + game._id">{{ game.titulo }}</router-link>
+                        
+                    </td>
                     <td class="flex py-3 px-4 gap-1">
                         <span v-if="game.namorada_flag" class="text-pink-500"><i class="bi bi-heart-fill"></i></span>
                         <span v-if="game.favorito_flag" class="text-yellow-500"><i class="bi bi-star-fill"></i></span>

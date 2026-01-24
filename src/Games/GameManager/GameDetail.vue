@@ -1,110 +1,23 @@
 <script setup>
-import { inject, ref, watch } from 'vue';
+import { inject } from 'vue';
 import MyModal from "@/Components/MyModal.vue";
-import ImageService from '@/services/ImageService';
-import ComentarioService from '@/services/ComentarioService';
 
-const emit = defineEmits(['close']);
+import ComentaryComponent from '@/Components/ComentaryComponent.vue';
+import GaleryComponent from '@/Components/GaleryComponent.vue';
+
+const emit = defineEmits(['close', 'image-added']);
 
 const game = inject('game');
 const isOpen = inject('isOpen');
 
-const image = ref({
-    gameId: game?.value?._id || '',
-    url: '',
-    isCover: false,
-})
-
-const comentarios = ref([]);
-const comentario = ref({
-    gameId: game?.value?._id || '',
-    texto: '',
-});
+const handleImageAdded = (image) => {
+    emit('image-added', image);
+};
 
 const handleClose = () => {
-    comentarios.value = [];
-
-    comentario.value.texto = '';
-    
-    image.value.url = '';
-    image.value.isCover = false;
-
     emit('close');
 };
 
-const addComment = async () => {
-    if (comentario.value.texto.trim() === '') {
-        return;
-    }
-
-    try {
-        const response = await ComentarioService.create(comentario.value);
-        console.log("Comentário adicionado com sucesso: ", response.data);
-
-        // Adicionar o comentário à lista localmente
-        comentarios.value.push(response.data);
-    } catch (error) {
-        console.error("Erro ao adicionar comentário: ", error);
-    } finally {
-        // Limpar o campo após adicionar
-        comentario.value.texto = '';
-    }
-}
-
-const getComentarios = async () => {
-    try {
-        const response = await ComentarioService.getComentarios(game.value._id);
-        console.log("Comentários buscados com sucesso: ", response);
-        comentarios.value = response || [];
-    } catch (error) {
-        console.error("Erro ao buscar comentários: ", error);
-    }
-}
-
-const addImage = async () => {
-    if (image.value.url.trim() === '') {
-        return;
-    }
-
-    try {
-
-        if (game.value.fotos?.length || 0 == 0) {
-            image.value.isCover = true;
-        } else {
-            image.value.isCover = false;
-        }
-
-        const response = await ImageService.create(image.value);
-
-        game.value.fotos.push(response.data);
-    } catch (error) {
-        console.error("Erro ao adicionar imagem: ", error);
-    } finally {
-        //Limpar o campo após adicionar
-        image.value.url = '';
-        image.value.isCover = false;
-    }
-}
-
-const removeImage = async (foto) => {
-    try {
-        const response = await ImageService.delete(foto._id);
-
-        // Remover a imagem da lista localmente
-        const index = game.value.fotos.findIndex(f => f._id === foto._id);
-        if (index !== -1) {
-            game.value.fotos.splice(index, 1);
-        }
-    } catch (error) {
-        console.error("Erro ao remover imagem: ", error);
-    }
-}
-
-watch(() => game.value, async (newGame) => {
-    if (newGame) {
-        await getComentarios();
-    }
-}, { immediate: true });
 </script>
 
 <template>
@@ -190,56 +103,12 @@ watch(() => game.value, async (newGame) => {
             <hr class="border-gray-800 my-4">
 
 
-            <div class="space-y-4">
-                <h3 class="text-sm font-semibold text-gray-400">Galeria</h3>
-                <div class="flex gap-3">
-                    <!-- <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-orange-400 to-yellow-200 flex-shrink-0">
-                    </div> -->
-                    <input type="text" v-model="image.url" placeholder="Add images to your gallery +"
-                        class="bg-transparent border-none outline-none text-sm text-gray-400 w-full placeholder:text-gray-700">
-                    <button class="p-2" @click="addImage()"><i class="bi bi-plus"></i></button>
-                </div>
-
-                <template v-for="foto in game.fotos">
-
-                    <div class="group relative aspect-video rounded-lg overflow-hidden border border-gray-800 bg-[#1e1e1e] cursor-pointer">
-                        <img :src="foto.url" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
-
-                        <button @click="removeImage(foto)" class="absolute top-2 right-2 p-1 bg-black/50 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                            <i class="bi bi-trash text-red-400"></i>
-                        </button>
-                    </div>
-                </template>
-            </div>
+            <GaleryComponent :game-id="game._id" @image-added="handleImageAdded"></GaleryComponent>
 
 
             <hr class="border-gray-800 my-4">
 
-            <div class="space-y-4">
-                <h3 class="text-sm font-semibold text-gray-400">Comentários</h3>
-                <div class="flex gap-3">
-                    <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-orange-400 to-yellow-200 flex-shrink-0">
-                    </div>
-                    <input type="text" v-model="comentario.texto" placeholder="Add a comment..."
-                        class="bg-transparent border-none outline-none text-sm text-gray-400 w-full placeholder:text-gray-700">
-                    <button class="p-2" @click="addComment()"><i class="bi bi-plus"></i></button>
-                </div>
-
-                <div>
-                    <div v-for="comentario in comentarios" :key="comentario._id" class="mb-4">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div
-                                class="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-400 to-yellow-200 flex-shrink-0">
-                            </div>
-                            <div>
-                                <p class="text-sm font-semibold text-gray-300">{{ comentario.texto }}</p>
-                                <p class="text-xs text-gray-500">{{ new
-                                    Date(comentario.dataCriacao).toLocaleDateString() }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <ComentaryComponent :game-id="game._id"></ComentaryComponent>
         </div>
     </MyModal>
 </template>

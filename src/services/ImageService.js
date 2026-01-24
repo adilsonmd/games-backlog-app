@@ -28,6 +28,20 @@ class ImageService {
         }
     }
 
+    async getGameImages(gameId) {
+        try {
+            const response = await axios.get(baseUrl + "/game/"+ gameId);
+            
+            if (response.status == 200)            
+                return response.data;
+
+            return null;
+        }
+        catch (erro) {
+            console.error(erro);
+        }
+    }
+
     async create(game) {
         try {
             const response = await axios.post(baseUrl, game);

@@ -41,6 +41,22 @@ class SteamService {
             console.error(erro);
         }
     }
+
+    async getOwnedGameById(id) {
+        try {            
+            const response = await axios.get(baseUrl + "/games/" + id);
+            
+            if (response.status == 200) {
+                let games = response.data.response.games;
+                return games;
+            }
+            console.log("Não encontrado", response);
+            return null;
+        }
+        catch (erro) {
+            console.error(erro);
+        }
+    }
 }
 
 export default new SteamService();

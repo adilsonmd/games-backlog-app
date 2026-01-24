@@ -115,7 +115,7 @@ onMounted(async () => {
                             <span class="text-[11px]">Iniciado em 12/10/25</span>
                         </div>
                         <div class="text-[11px] tracking-tighter font-semibold text-gray-400">
-                            Tempo de jogo: 50h
+                            Tempo de jogo: {{game.horasJogadas}}h
                         </div>
                         <div class="text-[11px] uppercase tracking-tighter font-semibold text-gray-400">
                             JRPG

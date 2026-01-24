@@ -13,7 +13,8 @@ class GamesService {
                 params: {
                     limit: query.limit,
                     page: query.page,
-                    q: query.search
+                    q: query.search,
+                    midia: query.midia
                 },
             });
             

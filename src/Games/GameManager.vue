@@ -15,6 +15,7 @@ const query = ref({
     page: 0,
     totalCount: 0,
     lastPage: false,
+    midia: '',
 });
 
 const Modal = ref({

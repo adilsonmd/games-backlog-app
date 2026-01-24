@@ -25,7 +25,14 @@ const OpenGameDetail = (game) => {
 
 const CloseGameDetail = () => {
     isOpen.value = false;
-    selectedGame.value = null;
+}
+
+const handleImage = (image) => {
+    const gameIndex = listOfGames.value.findIndex(g => g._id === image.gameId);
+
+    if (gameIndex !== -1)
+        listOfGames.value[gameIndex].fotos.push(image);
+
 }
 
 onMounted(async () => {
@@ -51,31 +58,31 @@ provide('game', selectedGame);
 
     <div class="grid grid-cols-3 gap-4 p-4">
 
-      <div v-for="game in listOfGames" :key="game._id"
-    class="game-item bg-[#252525] border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:bg-[#2e2e2e] transition-all group shadow-lg"
-    @click="OpenGameDetail(game)">
-    
-    <div class="p-2 flex items-center gap-1">
-        <h3 class="font-semibold text-gray-200 truncate text-sm tracking-tight">
-            {{ game.titulo }}
-        </h3>
-    </div>
-    <div class="relative w-full h-44 overflow-hidden border-b border-gray-800">
-        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-            :style="{ backgroundImage: `url(${game.fotos[0]?.url || 'caminho/para/placeholder.png'})` }">
+        <div v-for="game in listOfGames" :key="game._id"
+            class="game-item bg-[#252525] border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:bg-[#2e2e2e] transition-all group shadow-lg"
+            @click="OpenGameDetail(game)">
+
+            <div class="p-2 flex items-center gap-1">
+                <h3 class="font-semibold text-gray-200 truncate text-sm tracking-tight">
+                    {{ game.titulo }}
+                </h3>
+            </div>
+            <div class="relative w-full h-44 overflow-hidden border-b border-gray-800">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                    :style="{ backgroundImage: `url(${game.fotos[0]?.url || '/images/controle-placeholder.png'})` }">
+                </div>
+
+                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+            </div>
+
         </div>
-        
-        <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
-    </div>
-
-</div>
 
     </div>
-    <GameDetail v-if="isOpen" @close="CloseGameDetail()" :key="selectedGame?._id" />
+    <GameDetail v-if="isOpen" @close="CloseGameDetail()" @image-added="handleImage" :key="selectedGame?._id" />
 </template>
 
 <style scoped>
-    .game-item {
-        max-height: 300px !important;
-    }
+.game-item {
+    max-height: 300px !important;
+}
 </style>

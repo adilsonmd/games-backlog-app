@@ -67,8 +67,8 @@ const onSearch = () => {
         </button>
       </div>
 
-      <select class="bg-[#252525] text-sm text-gray-300 border border-gray-700 rounded-md px-3 py-1.5 outline-none focus:border-gray-500">
-        <option value="all">Todas as Mídias</option>
+      <select v-model="query.midia" class="bg-[#252525] text-sm text-gray-300 border border-gray-700 rounded-md px-3 py-1.5 outline-none focus:border-gray-500">
+        <option value="" selected="true">Todas as Mídias</option>
         <option value="digital">Digital</option>
         <option value="fisica">Física</option>
       </select>
