@@ -101,8 +101,8 @@ onUnmounted(() => {
         <template v-for="foto in images">
 
             <div
-                class="group relative aspect-video rounded-lg overflow-hidden border border-gray-800 bg-[#1e1e1e] cursor-pointer">
-                <img :src="foto.url" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                class="coverImage group relative aspect-video rounded-lg overflow-hidden border border-gray-800 bg-[#1e1e1e] cursor-pointer">
+                <img :src="foto.url" class=" w-full h-full object-cover transition-transform group-hover:scale-105" />
 
                 <button @click="removeImage(foto)"
                     class="absolute top-2 right-2 p-1 bg-black/50 rounded opacity-0 group-hover:opacity-100 transition-opacity">
@@ -112,3 +112,10 @@ onUnmounted(() => {
         </template>
     </div>
 </template>
+
+<style>
+.coverImage {
+    max-height: 500px;
+    max-width: 500px;
+}
+</style>

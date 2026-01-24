@@ -6,6 +6,7 @@ import GamesService from '@/services/GamesService';
 import SteamService from '@/services/SteamService';
 
 import ComentaryComponent from "@/Components/ComentaryComponent.vue";
+import GaleryComponent from '@/Components/GaleryComponent.vue';
 
 const route = useRoute();
 
@@ -40,6 +41,10 @@ const getSteamDetails = async (id = null) => {
     catch (error) {
         alert(error);
     }
+}
+
+const handleImageAdded = (image) => {
+    console.log("Adicionada a imagem", image);
 }
 
 onMounted(async () => {
@@ -96,6 +101,11 @@ onMounted(async () => {
 
         </section>
 
+        <section id="gallery-section">
+            <div>
+                <GaleryComponent :game-id="game._id" @image-added="handleImageAdded"></GaleryComponent>
+            </div>
+        </section>
         <section id="comment-section ">
             <div class="p-4">
                 <ComentaryComponent :game-id="game._id"></ComentaryComponent>
