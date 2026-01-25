@@ -6,16 +6,14 @@ import Sidebar from "./Components/Sidebar.vue";
 <template>
   <div>
     <div class="min-h-screen bg-white dark:bg-[#121212] text-gray-900 dark:text-gray-100 transition-colors duration-300">
-      <div class="flex h-screen">
-        <section class="bg-gray-800 text-white w-64 fixed h-full">
-          <Sidebar></Sidebar>
-        </section>
+      <div class="flex">
+        <Sidebar></Sidebar>
 
-    <main class="flex-1 overflow-y-auto ml-64">
-      <RouterView></RouterView>
-    </main>
-  </div>
-</div>
+        <main class="flex-1 min-h-screen overflow-y-auto transition-all duration-300 lg:ml-64">
+          <RouterView></RouterView>
+        </main>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -18,10 +18,13 @@ const handleClose = () => {
     emit('close');
 };
 
+const handleConfirm = () => {
+    emit('close');
+}
 </script>
 
 <template>
-    <MyModal :is-open="isOpen" @close="handleClose()" size="large">
+    <MyModal :is-open="isOpen" @close="handleClose" @confirm="handleConfirm" size="large">
         <template #header>
             <div class="flex flex-col gap-1 mt-4">
                 <h1 class="text-5xl font-bold text-gray-100 tracking-tight">
