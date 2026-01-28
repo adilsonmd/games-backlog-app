@@ -20,10 +20,10 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(
   response => response,
   error => {
-    if (error.response && error.response.status === 401) {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
       // Se a API retornar "Não Autorizado", limpamos tudo e mandamos para o Login
       localStorage.removeItem('token');
-      router.push({ name: 'LoginPage' });
+      router.push('login');
     }
     return Promise.reject(error);
   }
