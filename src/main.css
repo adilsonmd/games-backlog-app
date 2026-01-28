@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+
+.button-color {
+    background-color: #1a1a1a;
+}
+.button-color:hover {
+    background-color: #333333;
+}

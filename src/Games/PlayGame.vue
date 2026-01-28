@@ -1,13 +1,13 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, provide } from 'vue';
 
 import PsnService from '@/services/PsnService';
 import GamesService from '@/services/GamesService';
 import SteamService from '@/services/SteamService';
+import PageLayout from '@/Components/PageLayout.vue';
 
 const listOfGames = ref([]);
-const recentGames = ref([]);
-const columnsLayout = ref("grid-cols-3");
+const columnsLayout = ref("");
 
 
 const getPlayingGame = async () => {
@@ -90,29 +90,14 @@ onMounted(async () => {
     await callPageInformation();
 });
 
+provide("columnsLayout", columnsLayout);
+
 </script>
 <style sccope></style>
 <template>
 
-    <div class="flex flex-row justify-between p-4">
-        <div class="flex gap-1">
-            <button @click="changePageLayout(1)" class="inline-flex items-center rounded-md bg-[#1a1a1a] px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
-                <i class="bi bi-view-stacked"></i>
-            </button>
-            <button @click="changePageLayout(2)" class="inline-flex items-center rounded-md bg-[#1a1a1a] px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
-                <i class="bi bi-grid-fill"></i>
-            </button>
-            <button @click="changePageLayout(3)" class="inline-flex items-center rounded-md bg-[#1a1a1a] px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
-                <i class="bi bi-grid-3x3-gap-fill"></i>
-            </button>
-        </div>
+    <PageLayout @refresh="callPageInformation"></PageLayout>
 
-        <div>
-            <button @click="callPageInformation" class="inline-flex items-center rounded-md bg-[#1a1a1a] px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
-                <i class="bi bi-arrow-clockwise"></i>
-            </button>
-        </div>
-    </div>
     <div class="grid gap-4 p-4" :class="columnsLayout">
 
         <template v-for="(game, index) in listOfGames">

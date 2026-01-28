@@ -2,10 +2,13 @@
 import { ref, onMounted, provide } from "vue";
 import GamesService from "@/services/GamesService";
 import GameDetail from "./GameManager/GameDetail.vue";
+import PageLayout from "@/Components/PageLayout.vue";
 
 const isOpen = ref(false);
 const listOfGames = ref([]);
 const selectedGame = ref(null);
+
+const columnsLayout = ref("");
 
 const getWishlistGames = async () => {
     try {
@@ -41,22 +44,22 @@ onMounted(async () => {
 
 provide('isOpen', isOpen);
 provide('game', selectedGame);
-
+provide("columnsLayout", columnsLayout);
 </script>
 
 <template>
-    <div class="p-4">
-        <div class="flex items-center justify-between mb-4">
 
-            <h2 class="text-2xl font-bold mb-4">WishList</h2>
+
+    <PageLayout @refresh="getWishlistGames">
+        <template #right>
             <button @click="openCreate()"
-                class="flex items-center gap-2 bg-[#252525] hover:bg-[#323232] text-gray-300 px-3 py-1.5 rounded border border-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-xs font-medium">
+                class="flex items-center gap-2 button-color text-gray-300 px-3 py-1.5 rounded border border-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-xs font-medium">
                 <i class="bi bi-plus"></i>Adicionar jogo
             </button>
-        </div>
-    </div>
+        </template>
+    </PageLayout>
 
-    <div class="grid grid-cols-3 gap-4 p-4">
+    <div class="grid gap-4 p-4" :class="columnsLayout">
 
         <div v-for="game in listOfGames" :key="game._id"
             class="game-item bg-[#252525] border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:bg-[#2e2e2e] transition-all group shadow-lg"
@@ -67,7 +70,8 @@ provide('game', selectedGame);
                     {{ game.titulo }}
                 </h3>
             </div>
-            <div class="relative w-full h-44 overflow-hidden border-b border-gray-800">
+            <div class="relative w-full  overflow-hidden border-b border-gray-800"
+                :class="columnsLayout == 'grid-cols-1' ? 'h-80' : 'h-48'">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                     :style="{ backgroundImage: `url(${game.fotos[0]?.url || '/images/controle-placeholder.png'})` }">
                 </div>
