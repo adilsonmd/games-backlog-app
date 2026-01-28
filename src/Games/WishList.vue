@@ -53,7 +53,7 @@ provide("columnsLayout", columnsLayout);
     <PageLayout @refresh="getWishlistGames">
         <template #right>
             <button @click="openCreate()"
-                class="flex items-center gap-2 button-color text-gray-300 px-3 py-1.5 rounded border border-gray-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-xs font-medium">
+                class="button button-color">
                 <i class="bi bi-plus"></i>Adicionar jogo
             </button>
         </template>
