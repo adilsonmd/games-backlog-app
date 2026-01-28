@@ -1,6 +1,8 @@
 <script setup>
 
 import GamesService from '@/services/GamesService';
+import PsnService from '@/services/PsnService';
+import SteamService from '@/services/SteamService';
 import { onMounted, ref, watch } from 'vue';
 
 const listOfGames = ref([]);
@@ -9,6 +11,10 @@ const isCounting = ref(false);
 const intervalId = ref(null);
 const startTime = ref();
 const elapsedPausedTime = ref(0);
+
+const columnsLayout = ref("grid-cols-3");
+
+const recentGames = ref([]);
 
 const toggleCount = () => {
     isCounting.value = !isCounting.value;
@@ -83,21 +89,69 @@ const getPlayingGame = async () => {
     }
 }
 
+const getSteamPlayerSummary = async () => {
+    try {
+        const playerData = await SteamService.getPlayerSummary();
+        let gameName = playerData.response.players.player[0]?.gameextrainfo || null;
+        if (gameName) {
+            if (!recentGames.value.includes(gameName))
+                recentGames.value.push(gameName);
+        }
+    } catch (error) {
+        console.error("Erro ao buscar dados do Steam: ", error);
+        return null;
+    }
+};
+
+const getPsnPlayerSummary = async () => {
+    try {
+        const playerData = await PsnService.getPlayerSummary();
+        let gameName = playerData.basicPresence?.gameTitleInfoList[0]?.titleName || null;
+        
+        if (!gameName) {
+            console.error("Não encontrado");
+            return;
+        }
+        let valor = listOfGames.value.find(x => x.titulo === gameName);
+        
+        if (!valor) 
+            return;
+
+        
+    } catch (error) {
+        console.error("Erro ao buscar dados do PSN: ", error);
+        return null;
+    }
+};
+
+const changePageLayout = (cols) => {
+    if ([1,2,3,4,6].includes(cols)) {
+        columnsLayout.value = `grid-cols-${cols}`; 
+    }
+}
 onMounted(async () => {
     await getPlayingGame();
+
+    await getSteamPlayerSummary();
+    await getPsnPlayerSummary();
 });
 
 </script>
 <style sccope></style>
 <template>
 
-    <div class="grid grid-cols-2 gap-4 p-4">
+    <div class="flex p-4">
+        <button @click="changePageLayout(1)" class="border p-1 cursor-pointer"><i class="bi bi-view-stacked"></i></button>
+        <button @click="changePageLayout(2)" class="border p-1 cursor-pointer"><i class="bi bi-grid-fill"></i></button>
+        <button @click="changePageLayout(3)" class="border p-1 cursor-pointer"><i class="bi bi-grid-3x3-gap-fill"></i></button>
+    </div>
+    <div class="grid gap-4 p-4" :class="columnsLayout">
 
         <template v-for="(game, index) in listOfGames">
 
             <div
                 class="bg-[#1a1a1a] rounded-xl overflow-hidden border border-gray-800 hover:border-blue-500 transition-all group">
-                <div class="relative h-48">
+                <div class="relative h-64">
                     <img :src="game?.fotos?.find(x => x.isCover === true)?.url ?? ''"
                         class="w-full h-full object-cover">
                     <div
