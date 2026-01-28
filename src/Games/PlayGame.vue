@@ -80,33 +80,37 @@ const changePageLayout = (cols) => {
     }
 }
 
-const borderStyle = (game) => {
-    // "border-gray-800 hover:border-blue-500"
-    // if (game.isPlaying)
-    // return border-green-500 hover:border-green-400
-    console.log(game);
-
-};
-onMounted(async () => {
+const callPageInformation = async () => {
     await getPlayingGame();
 
     await getSteamPlayerSummary();
     await getPsnPlayerSummary();
+};
+onMounted(async () => {
+    await callPageInformation();
 });
 
 </script>
 <style sccope></style>
 <template>
 
-    <div class="flex flex-row p-4">
-        <div>
-            <button @click="changePageLayout(1)" class="border p-1 cursor-pointer"><i class="bi bi-view-stacked"></i></button>
-            <button @click="changePageLayout(2)" class="border p-1 cursor-pointer"><i class="bi bi-grid-fill"></i></button>
-            <button @click="changePageLayout(3)" class="border p-1 cursor-pointer"><i class="bi bi-grid-3x3-gap-fill"></i></button>
+    <div class="flex flex-row justify-between p-4">
+        <div class="flex gap-1">
+            <button @click="changePageLayout(1)" class="inline-flex items-center rounded-md bg-[#1a1a1a] px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
+                <i class="bi bi-view-stacked"></i>
+            </button>
+            <button @click="changePageLayout(2)" class="inline-flex items-center rounded-md bg-[#1a1a1a] px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
+                <i class="bi bi-grid-fill"></i>
+            </button>
+            <button @click="changePageLayout(3)" class="inline-flex items-center rounded-md bg-[#1a1a1a] px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
+                <i class="bi bi-grid-3x3-gap-fill"></i>
+            </button>
         </div>
 
         <div>
-            <button class="border p-1 cursor-pointer"><i class="bi bi-arrow-clockwise"></i></button>
+            <button @click="callPageInformation" class="inline-flex items-center rounded-md bg-[#1a1a1a] px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button>
         </div>
     </div>
     <div class="grid gap-4 p-4" :class="columnsLayout">
@@ -115,13 +119,13 @@ onMounted(async () => {
 
             <div
                 class="bg-[#1a1a1a] rounded-xl overflow-hidden border  transition-all group" 
-                :class="game?.isPlaying === true ? 'border-green-800 hover:border-green-500' : 'border-gray-800 hover:border-blue-500'">
+                :class="game?.isPlaying === true ? 'border-green-800 hover:border-green-500' : 'border-gray-800 hover:border-gray-500'">
                 <div class="relative h-64">
                     <img :src="game?.fotos?.find(x => x.isCover === true)?.url ?? ''"
                         class="w-full h-full object-cover">
                     <div
                         class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white border border-white/10">
-                        {{ game.plataformaAdquirida }}
+                        {{ game.plataformaAdquirida.join(',') }}
                     </div>
                 </div>
 
@@ -130,8 +134,8 @@ onMounted(async () => {
 
                     <div class="flex items-center justify-between mt-3 text-gray-500">
                             <div v-if="game.isPlaying" class="flex items-center gap-1.5">
-                                <i class="bi bi-play text-green-500"></i>
-                                <span class="text-[12px]">Jogando Agora</span>
+                                <i class="bi bi-play text-green-600"></i>
+                                <span class="text-[12px] text-green-600">Jogando Agora</span>
                             </div>
                             <div v-else class="flex items-center gap-1.5">
                                 <i class="bi bi-pause text-gray-500"></i>
