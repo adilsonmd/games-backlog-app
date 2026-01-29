@@ -1,14 +1,18 @@
 <script setup>
-import { onMounted, ref, provide } from 'vue';
 
-import PsnService from '@/services/PsnService';
+import { onMounted, ref, provide } from 'vue';
+import { useRouter } from 'vue-router';
+
 import GamesService from '@/services/GamesService';
-import SteamService from '@/services/SteamService';
 import PageLayout from '@/Components/PageLayout.vue';
+import PlayingComponent from '@/Components/PlayingComponent.vue';
+
+
+const router = useRouter(); // Inicializando o router.
 
 const listOfGames = ref([]);
 const columnsLayout = ref("");
-
+const refreshToken = ref(0);
 
 const getPlayingGame = async () => {
     try {
@@ -26,66 +30,18 @@ const getPlayingGame = async () => {
     }
 }
 
-const getSteamPlayerSummary = async () => {
-    try {
-        const playerData = await SteamService.getPlayerSummary();
-        let gameName = playerData.response.players.player[0]?.gameextrainfo || null;
-        let gameId = playerData.response.players.player[0]?.steamid || null;
-
-        if (gameName && gameId) {
-            let valor = listOfGames.value.findIndex(x => x.titulo === gameName || x.steam_id == gameId);
-
-            if (valor === -1)
-                return;
-
-            listOfGames.value[valor].isPlaying = true;
-        }
-    } catch (error) {
-        console.error("Erro ao buscar dados do Steam: ", error);
-        return null;
-    }
-};
-
-const getPsnPlayerSummary = async () => {
-    try {
-        const playerData = await PsnService.getPlayerSummary();
-
-        if (!playerData) {
-            return;
-        }
-
-        // Checando se há dados no retorno;
-        if (playerData.basicPresence.availability === "unavailable")
-            return;
-
-        let gameName = playerData.basicPresence?.gameTitleInfoList[0]?.titleName || null;
-        let gameId = playerData.basicPresence?.gameTitleInfoList[0]?.npTitleId || null
-
-        gameId = gameId.replace("_", "");
-        let valor = listOfGames.value.findIndex(x => x.titulo === gameName || x.psn_id == gameId);
-
-        if (valor === -1)
-            return;
-
-        listOfGames.value[valor].isPlaying = true;
-    } catch (error) {
-        console.error("Erro ao buscar dados do PSN: ", error);
-        return null;
-    }
-};
-
-const changePageLayout = (cols) => {
-    if ([1, 2, 3, 4, 6].includes(cols)) {
-        columnsLayout.value = `grid-cols-${cols}`;
-    }
+const openGameDetailPage = (game) => {
+    router.push('/biblioteca/' + game._id);
 }
 
-const callPageInformation = async () => {
+const callPageInformation = async (refresh = false) => {
     await getPlayingGame();
 
-    await getSteamPlayerSummary();
-    await getPsnPlayerSummary();
+    if (refresh) {
+        refreshToken.value += 1;
+    }
 };
+
 onMounted(async () => {
     await callPageInformation();
 });
@@ -96,14 +52,14 @@ provide("columnsLayout", columnsLayout);
 <style sccope></style>
 <template>
 
-    <PageLayout @refresh="callPageInformation"></PageLayout>
+    <PageLayout @refresh="callPageInformation(true)"></PageLayout>
 
     <div class="grid gap-4 p-4" :class="columnsLayout">
 
         <template v-for="(game, index) in listOfGames">
 
-            <div
-                class="bg-[#1a1a1a] rounded-xl overflow-hidden border  transition-all group" 
+            <div @click="openGameDetailPage(game)"
+                class="bg-[#1a1a1a] rounded-xl overflow-hidden border  transition-all group cursor-pointer"
                 :class="game?.isPlaying === true ? 'border-green-800 hover:border-green-500' : 'border-gray-800 hover:border-gray-500'">
                 <div class="relative h-64">
                     <img :src="game?.fotos?.find(x => x.isCover === true)?.url ?? ''"
@@ -118,14 +74,9 @@ provide("columnsLayout", columnsLayout);
                     <h3 class="font-bold text-gray-100 truncate">{{ game.titulo }}</h3>
 
                     <div class="flex items-center justify-between mt-3 text-gray-500">
-                            <div v-if="game.isPlaying" class="flex items-center gap-1.5">
-                                <i class="bi bi-play text-green-600"></i>
-                                <span class="text-[12px] text-green-600">Jogando Agora</span>
-                            </div>
-                            <div v-else class="flex items-center gap-1.5">
-                                <i class="bi bi-pause text-gray-500"></i>
-                                <span class="text-[12px]">Em espera</span>
-                            </div>
+
+                        <PlayingComponent :game="game" :key="refreshToken"></PlayingComponent>
+
                         <div class="text-[11px] tracking-tighter font-semibold text-gray-400">
                             Tempo de jogo: {{ game.horasJogadas }}h
                         </div>
