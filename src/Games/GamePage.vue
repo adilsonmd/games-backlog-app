@@ -3,15 +3,14 @@ import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 
 import GamesService from '@/services/GamesService';
-import SteamService from '@/services/SteamService';
 
 import ComentaryComponent from "@/Components/ComentaryComponent.vue";
 import GaleryComponent from '@/Components/GaleryComponent.vue';
+import PlayingComponent from '@/Components/PlayingComponent.vue';
 
 const route = useRoute();
 
 const game = ref(null);
-const steamDetail = ref(null);
 
 const getGameById = async (id) => {
     try {
@@ -19,28 +18,11 @@ const getGameById = async (id) => {
         const response = await GamesService.getById(id);
 
         game.value = response;
-
-        getSteamDetails(game.value?.steam_id ?? null);
     }
     catch (error) {
         alert(error);
     }
 
-}
-
-const getSteamDetails = async (id = null) => {
-    try {
-        if (!id) {
-            return;
-        }
-
-        const response = await SteamService.getOwnedGameById(id);
-        console.log(response);
-        steamDetail.value = response;
-    }
-    catch (error) {
-        alert(error);
-    }
 }
 
 const handleImageAdded = (image) => {
@@ -59,12 +41,8 @@ onMounted(async () => {
         <h2 class="text-xl font-semibold text-gray-400">Game - {{ game.titulo }}</h2>
 
         <section>
-
-
-
+            
             <div class="flex flex-row">
-
-
                 <div class="my-4 flex flex-col gap-4">
 
                     <div class="grid grid-cols-[150px_1fr] items-center group">
@@ -142,11 +120,17 @@ onMounted(async () => {
                             <span>Flags</span>
                         </div>
                         <div class="flex gap-2">
-                            <span class="text-pink-500" v-if="game.namorada_flag"><i class="bi bi-heart-fill"></i></span>
-                            <span class="text-yellow-500" v-if="game.favorito_flag"><i class="bi bi-star-fill"></i></span>
+                            <span class="text-pink-500" v-if="game.namorada_flag"><i
+                                    class="bi bi-heart-fill"></i></span>
+                            <span class="text-yellow-500" v-if="game.favorito_flag"><i
+                                    class="bi bi-star-fill"></i></span>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="flex">
+                <PlayingComponent :game="game"></PlayingComponent>
             </div>
         </section>
 
