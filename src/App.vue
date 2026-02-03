@@ -9,9 +9,11 @@ import Sidebar from "./Components/Sidebar.vue";
       <div class="flex">
         <Sidebar></Sidebar>
 
-        <main class="flex-1 min-h-screen overflow-y-auto transition-all duration-300 lg:ml-64">
-          <RouterView></RouterView>
-        </main>
+        <div class="flex-1 overflow-y-auto transition-all duration-300
+             pt-20 lg:pt-4 
+             pl-4 lg:pl-0 lg:ml-64"> 
+          <router-view />
+        </div>
       </div>
     </div>
   </div>

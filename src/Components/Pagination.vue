@@ -77,7 +77,7 @@ const onSearch = () => {
       <button @click="onSearch" class="flex bg-[#252525] rounded-md border border-gray-700 px-2.5 py-1.5"><i class="bi bi-search"></i></button>
     </div>
 
-    <div class="flex items-center justify-between border-t border-gray-800 pt-3">
+    <div class="flex flex-row sm:flex-1 items-center lg:justify-between border-t border-gray-800 pt-3">
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-2">
           <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold">Por página</label>

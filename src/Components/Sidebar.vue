@@ -36,6 +36,9 @@ const closeSidebar = () => { isOpen.value = false; };
   <nav id="sidebar" :class="[isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0']"
     class="fixed top-0 left-0 z-40 w-64 h-screen bg-[#1a1a1a] border-r border-gray-800 flex flex-col transition-transform duration-300 ease-in-out">
     <div class="p-6 mb-4 flex items-center justify-between">
+
+      
+  
       <router-link to="/" class="flex items-center gap-3 no-underline" @click="closeSidebar">
         <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg">
           <i class="bi bi-controller"></i>

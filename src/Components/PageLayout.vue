@@ -1,16 +1,26 @@
 <script setup>
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted, inject, onUnmounted } from "vue";
 
 const emit = defineEmits(['refresh']);
 
 const columnsLayout = inject("columnsLayout");
 
+const isMobile = () => window.innerWidth < 1024;
+
 const changePageLayout = (cols) => {
     if ([1, 2, 3, 4, 6].includes(cols)) {
         columnsLayout.value = `grid-cols-${cols}`;
     }
-    return "grid-cols-3";
 }
+
+const updateLayoutOnResize = () => {
+    // Se o usuário redimensionar a tela, você decide se quer forçar a mudança
+    if (isMobile() && columnsLayout.value !== 'grid-cols-1') {
+        columnsLayout.value = 'grid-cols-1';
+    } else {
+        columnsLayout.value = 'grid-cols-3';
+    }
+};
 
 const refreshPage = () => {
     emit('refresh');
@@ -18,8 +28,14 @@ const refreshPage = () => {
 
 onMounted(() => {
     if (!columnsLayout.value) {
-        columnsLayout.value = "grid-cols-3";
+        columnsLayout.value = isMobile() ? "grid-cols-1" : "grid-cols-3";
     }
+
+    window.addEventListener('resize', updateLayoutOnResize);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', updateLayoutOnResize);
 });
 </script>
 <template>
