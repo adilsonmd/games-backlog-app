@@ -10,12 +10,7 @@ class GamesService {
             let games;
             
             const response = await axios.get(baseUrl + "/", {
-                params: {
-                    limit: query.limit,
-                    page: query.page,
-                    q: query.search,
-                    midia: query.midia
-                },
+                params: { ...query},
             });
             
             games = response.data.games;

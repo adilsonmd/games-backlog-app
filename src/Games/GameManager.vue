@@ -16,6 +16,8 @@ const query = ref({
     totalCount: 0,
     lastPage: false,
     midia: '',
+    status: '',
+    statusCompra: '',
 });
 
 const Modal = ref({
