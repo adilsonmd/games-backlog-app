@@ -178,9 +178,9 @@ watch(() => query.value.page, async (newPage) => {
         <ContentTable :table-details="{ columns: [
                 { name: 'Título' },
                 { name: 'Flags'},
-                { name: 'Horas Jogadas' },
+                { name: 'Status' },
+                { name: 'Status Compra' },
                 { name: 'Plataformas' },
-                { name: 'Mídia' },
                 { name: 'Ações' }
             ], data: listOfGames }"
             @edit-game="(game) => openEdit(game)"></ContentTable>

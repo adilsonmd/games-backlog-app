@@ -28,7 +28,28 @@ const getGameById = async (id) => {
 const handleImageAdded = (image) => {
     console.log("Adicionada a imagem", image);
 }
+const obterClassePill = (status) => {
+    if (!status)
+        return 'gray-pill';
 
+    if (status === "Backlog")
+        return 'gray-pill'
+    else if (status === "Jogando")
+        return 'blue-pill';
+    else if (status === "Finalizado")
+        return 'green-pill';
+    else if (status === "Pausado")
+        return 'gray-pill';
+    else if (status == 'Cancelado')
+        return 'red-pill'
+    else if (status == 'Wishlist')
+        return 'gray-pill'
+    else if (status == 'Pré-venda')
+        return 'blue-pill'
+    else if (status == 'Adquirido')
+        return 'green-pill'
+    return 'gray-pill';
+}
 onMounted(async () => {
 
     await getGameById(route.params.id);
@@ -90,7 +111,7 @@ onMounted(async () => {
                         </div>
                         <div class="flex">
                             <span
-                                class="bg-blue-900/30 text-blue-400 px-3 py-0.5 rounded-full text-xs flex items-center gap-1.5 border border-blue-800/50">
+                                class="pill" :class="obterClassePill(game.statusCompra)">
                                 <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
                                 {{ game.statusCompra }}
                             </span>
@@ -104,7 +125,7 @@ onMounted(async () => {
                         </div>
                         <div class="flex">
                             <span
-                                class="bg-[#373737] text-gray-300 px-3 py-0.5 rounded-full text-xs flex items-center gap-1.5">
+                                class="pill" :class="obterClassePill(game.status)">
                                 <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
                                 {{ game.status || 'Não iniciei' }}
                             </span>

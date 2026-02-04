@@ -11,15 +11,15 @@
 inline-flex items-center rounded-md button-color px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5
 */
 .button {
-    display       : inline-flex;
-    padding-block : calc(var(--spacing) * 2);
-    align-items   : center;
-    font-size     : var(--text-sm);
-    line-height   : var(--tw-leading, var(--text-sm--line-height));
-    padding-inline: calc(var(--spacing) * 3);
-    border-radius : var(--radius-md);
-    color: white;
-    box-shadow: inset 0 0 0 calc(1px + 0px) #272727;
+    display        : inline-flex;
+    padding-block  : calc(var(--spacing) * 2);
+    align-items    : center;
+    font-size      : var(--text-sm);
+    line-height    : var(--tw-leading, var(--text-sm--line-height));
+    padding-inline : calc(var(--spacing) * 3);
+    border-radius  : var(--radius-md);
+    color          : white;
+    box-shadow     : inset 0 0 0 calc(1px + 0px) #272727;
     --tw-ring-inset: inset;
 }
 
@@ -29,4 +29,78 @@ inline-flex items-center rounded-md button-color px-3 py-2 text-sm font-semibold
 
 .button-color:hover {
     background-color: #333333;
+}
+
+.pill {
+    border-bottom-left-radius        : 3.0504e+07px;
+    border-bottom-right-radius       : 3.0504e+07px;
+    border-bottom-style              : solid;
+    border-bottom-width              : 0.909091px;
+    border-collapse                  : collapse;
+    border-image-outset              : 0;
+    border-image-repeat              : stretch;
+    border-image-slice               : 100%;
+    border-image-source              : none;
+    border-image-width               : 1;
+    border-left-style                : solid;
+    border-left-width                : 0.909091px;
+    border-right-style               : solid;
+    border-right-width               : 0.909091px;
+    border-top-left-radius           : 3.0504e+07px;
+    border-top-right-radius          : 3.0504e+07px;
+    border-top-style                 : solid;
+    border-top-width                 : 0.909091px;
+    box-sizing                       : border-box;
+    display                          : inline;
+    font-family                      : ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size                        : 12px;
+    font-variation-settings          : normal;
+    height                           : auto;
+    line-height                      : 16px;
+    margin                           : 0px;
+    padding-block                    : 2px;
+    padding-bottom                   : 2px;
+    padding-top                      : 2px;
+    padding-inline                   : 12px;
+    padding-left                     : 12px;
+    padding-right                    : 12px;
+    tab-size                         : 4;
+    text-indent                      : 0px;
+    text-size-adjust                 : 100%;
+    width                            : auto;
+    -webkit-border-horizontal-spacing: 1.81818px;
+    -webkit-border-vertical-spacing  : 1.81818px;
+}
+
+.blue-pill {
+    background-color           : oklab(0.379 -0.0113991 -0.145554 / 0.3);
+    border-color           : oklab(0.424 -0.0151354 -0.198424 / 0.5);
+    color                      : oklch(0.707 0.165 254.624);
+}
+
+/* bg-green-900/30 text-green-400 border-green-800/50 */
+.green-pill {
+
+    background-color: oklab(0.393 -0.0842928 0.0438146 / 0.3);
+    border-color: oklab(0.448 -0.104408 0.0570956 / 0.5);
+    color: oklch(0.792 0.209 151.711);
+}
+
+/* bg-gray-800/30 text-gray-400 border-gray-700/50 */
+.gray-pill {
+    background-color: oklab(0.278 -0.00750866 -0.0321344 / 0.3);
+    border-color: oklab(0.373 -0.00605999 -0.0334556 / 0.5);
+    color:oklch(0.707 0.022 261.325);
+}
+
+.orange-pill {
+    border-color: oklab(0.408 0.0966976 0.076017 / 0.8);
+    background-color: oklab(0.408 0.0966976 0.076017 / 0.3);
+    color: oklab(0.705 0.143615 0.157301 / 0.8);
+}
+
+.red-pill {
+    border-color: oklab(0.444 0.15785 0.0800782 / 0.5);
+    background-color: oklab(0.396 0.127027 0.0611969 / 0.3);
+    color: oklch(0.704 0.191 22.216);
 }

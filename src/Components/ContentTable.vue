@@ -13,6 +13,29 @@ const handleEdit = (game) => {
     // Lógica para editar o jogo
     emit('edit-game', game);
 };
+
+const obterClassePill = (status) => {
+    if (!status)
+        return 'gray-pill';
+
+    if (status === "Backlog")
+        return 'gray-pill'
+    else if (status === "Jogando")
+        return 'blue-pill';
+    else if (status === "Finalizado")
+        return 'green-pill';
+    else if (status === "Pausado")
+        return 'gray-pill';
+    else if (status == 'Cancelado')
+        return 'red-pill'
+    else if (status == 'Wishlist')
+        return 'gray-pill'
+    else if (status == 'Pré-venda')
+        return 'blue-pill'
+    else if (status == 'Adquirido')
+        return 'green-pill'
+    return 'gray-pill';
+}
 </script>
 
 <template>
@@ -37,7 +60,7 @@ const handleEdit = (game) => {
                     class="hover:bg-gray-50 dark:hover:bg-[#1e1e1e] transition-colors">
                     <td class="px-4 py-3 font-medium">
                         <router-link :to="'/biblioteca/' + game._id">{{ game.titulo }}</router-link>
-                        
+
                     </td>
                     <td class="flex py-3 px-4 gap-1">
                         <span v-if="game.namorada_flag" class="text-pink-500"><i class="bi bi-heart-fill"></i></span>
@@ -45,7 +68,22 @@ const handleEdit = (game) => {
                         <span v-if="game.statusCompra === 'Wishlist'" class=""><i
                                 class="bi bi-bag-heart-fill"></i></span>
                     </td>
-                    <td class="px-4 py-3 text-gray-500">{{ game.horasJogadas }}</td>
+                    <td class="px-4 py-3">
+                        <span
+                                class="pill blue-pill" :class="obterClassePill(game.status)">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                {{ game.status }}
+                            </span>
+                    </td>
+
+                    <td class="px-4 py-3">
+                        <span
+                                class="pill" :class="obterClassePill(game.statusCompra)">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                {{ game.statusCompra }}
+                            </span>
+                    </td>
+
                     <td class="px-4 py-3">
                         <div class="flex flex-row gap-2">
                             <template v-for="plataforma in game.plataformaAdquirida">
@@ -65,21 +103,12 @@ const handleEdit = (game) => {
                             </template>
                         </div>
                     </td>
-                    <td class="flex gap-1 px-4 py-3">
-                        <span v-show="game.midiaFisica">
-                            <i class="bi bi-disc"></i>
-                        </span>
-                        <span v-show="game.midiaDigital">
-                            <i class="bi bi-cloudy"></i>
-                        </span>
-                    </td>
+
                     <td class="px-4 py-3 text-gray-500">
                         <button class="cursor-pointer" @click="handleEdit(game)"><i class="bi bi-pencil"></i></button>
                     </td>
                 </tr>
-
             </tbody>
         </table>
     </div>
-
 </template>
