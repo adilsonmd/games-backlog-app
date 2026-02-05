@@ -1,14 +1,13 @@
 <script setup>
 
 import { onMounted, ref, provide } from 'vue';
-import { useRouter } from 'vue-router';
+
 
 import GamesService from '@/services/GamesService';
 import PageLayout from '@/Components/PageLayout.vue';
-import PlayingComponent from '@/Components/PlayingComponent.vue';
+import CardComponent from '@/Components/CardComponent.vue';
 
 
-const router = useRouter(); // Inicializando o router.
 
 const listOfGames = ref([]);
 const columnsLayout = ref("");
@@ -28,10 +27,6 @@ const getPlayingGame = async () => {
     catch (error) {
         alert(error);
     }
-}
-
-const openGameDetailPage = (game) => {
-    router.push('/biblioteca/' + game._id);
 }
 
 const callPageInformation = async (refresh = false) => {
@@ -57,8 +52,8 @@ provide("columnsLayout", columnsLayout);
     <div class="grid gap-4 p-4" :class="columnsLayout">
 
         <template v-for="(game, index) in listOfGames">
-
-            <div @click="openGameDetailPage(game)"
+            <CardComponent :game="game" :refresh-token="refreshToken"></CardComponent>
+            <!-- <div @click="openGameDetailPage(game)"
                 class="bg-[#1a1a1a] rounded-xl overflow-hidden border  transition-all group cursor-pointer"
                 :class="game?.isPlaying === true ? 'border-green-800 hover:border-green-500' : 'border-gray-800 hover:border-gray-500'">
                 <div class="relative h-64">
@@ -85,7 +80,7 @@ provide("columnsLayout", columnsLayout);
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </template>
     </div>
 

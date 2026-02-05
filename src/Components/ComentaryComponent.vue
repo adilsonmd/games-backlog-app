@@ -55,7 +55,7 @@ onMounted(async () => {
             </div>
             <input type="text" v-model="comentario.texto" placeholder="Adicionar comentário..."
                 class="bg-transparent border-none outline-none text-sm text-gray-400 w-full placeholder:text-gray-700">
-            <button class="px-1 cursor-pointer border rounded" @click="addComment()"><i class="bi bi-plus"></i></button>
+            <button class="button cursor-pointer" @click="addComment()"><i class="bi bi-plus"></i></button>
         </div>
 
         <div>
