@@ -14,7 +14,6 @@ const game = ref(null);
 
 const getGameById = async (id) => {
     try {
-
         const response = await GamesService.getById(id);
 
         game.value = response;

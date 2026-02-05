@@ -1,11 +1,15 @@
 <script setup>
 
+import { useRoute, useRouter } from "vue-router";
 import { ref, onMounted, watch } from "vue";
 import GamesService from '@/services/GamesService';
 import Pagination from "@/Components/Pagination.vue"
 import LoadingOverlay from "@/Components/LoadingOverlay.vue";
 import CreateGame from "./GameManager/CreateGame.vue";
 import ContentTable from "@/Components/ContentTable.vue";
+
+const route = useRoute();
+const router = useRouter();
 
 const listOfGames = ref([]);
 const isLoading = ref(false);
@@ -56,16 +60,23 @@ const search = async (search) => {
     }
 }
 
-const callListOfGames = async (page = 0) => {
+const callListOfGames = async (page) => {
     try {
         isLoading.value = true;
-
-        query.value.page = page
+        // Alterar na rota
+        if (page == null || page == undefined || page == NaN )  { 
+            page = 0;
+        }
+        router.push({ 
+            path: route.path,
+            query: { page: page } 
+        });
 
         const { games, queryReturn } = await GamesService.getAll(query.value);
-
+        
         listOfGames.value = games;
         query.value = queryReturn;
+        
     } catch (erro) {
         console.log("Erro no manager: ", erro);
     }
@@ -146,7 +157,10 @@ const openEdit = (game) => {
     Modal.value.isOpen = true;
 }
 onMounted(async () => {
+    query.value.page = Number(route.query.page ?? 0) || 0;
+
     await callListOfGames();
+
 });
 
 watch(() => query.value.page, async (newPage) => {
