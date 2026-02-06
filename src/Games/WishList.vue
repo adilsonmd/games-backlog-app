@@ -3,6 +3,7 @@ import { ref, onMounted, provide } from "vue";
 import GamesService from "@/services/GamesService";
 import GameDetail from "./GameManager/GameDetail.vue";
 import PageLayout from "@/Components/PageLayout.vue";
+import CardComponent from "@/Components/CardComponent.vue";
 
 const isOpen = ref(false);
 const listOfGames = ref([]);
@@ -60,27 +61,9 @@ provide("columnsLayout", columnsLayout);
     </PageLayout>
 
     <div class="grid gap-4 p-4" :class="columnsLayout">
-
-        <div v-for="game in listOfGames" :key="game._id"
-            class="game-item bg-[#252525] border border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:bg-[#2e2e2e] transition-all group shadow-lg"
-            @click="OpenGameDetail(game)">
-
-            <div class="p-2 flex items-center gap-1">
-                <h3 class="font-semibold text-gray-200 truncate text-sm tracking-tight">
-                    {{ game.titulo }}
-                </h3>
-            </div>
-            <div class="relative w-full  overflow-hidden border-b border-gray-800"
-                :class="columnsLayout == 'grid-cols-1' ? 'h-80' : 'h-48'">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                    :style="{ backgroundImage: `url(${game.fotos[0]?.url || '/images/controle-placeholder.png'})` }">
-                </div>
-
-                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
-            </div>
-
-        </div>
-
+        <template v-for="(game, index) in listOfGames">
+            <CardComponent :playing="false" :game="game" :refresh-token="0"></CardComponent>
+        </template>
     </div>
     <GameDetail v-if="isOpen" @close="CloseGameDetail()" @image-added="handleImage" :key="selectedGame?._id" />
 </template>
