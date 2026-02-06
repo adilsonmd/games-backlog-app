@@ -1,21 +1,11 @@
 <script setup>
-import {ref} from "vue";
-import { useRouter } from 'vue-router';
 import PlayingComponent from '@/Components/PlayingComponent.vue';
 
 const props = defineProps(['game', 'refreshToken']);
 
-const refreshToken = ref(0);
-
-const router = useRouter(); // Inicializando o router.
-
-const openGameDetailPage = (game) => {
-    router.push('/biblioteca/' + game._id);
-}
-
 </script>
 <template>
-    <div @click="openGameDetailPage(game)"
+    <a :href="'/biblioteca/' + game._id"
         class="bg-[#1a1a1a] rounded-xl overflow-hidden border  transition-all group cursor-pointer"
         :class="props.game?.isPlaying === true ? 'border-green-800 hover:border-green-500' : 'border-gray-800 hover:border-gray-500'">
         <div class="relative h-64">
@@ -41,5 +31,5 @@ const openGameDetailPage = (game) => {
                 </div>
             </div>
         </div>
-    </div>
+    </a>
 </template>
