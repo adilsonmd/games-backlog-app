@@ -95,7 +95,7 @@ onUnmounted(() => {
                     </div> -->
             <input type="text" v-model="image.url" placeholder="Add images to your gallery +"
                 class="bg-transparent border-none outline-none text-sm text-gray-400 w-full placeholder:text-gray-700">
-            <button class="button cursor-pointer" @click="addImage()"><i class="bi bi-plus"></i></button>
+            <button class="button button-color cursor-pointer" @click="addImage()"><i class="bi bi-plus"></i></button>
         </div>
 
         <template v-for="foto in images">
