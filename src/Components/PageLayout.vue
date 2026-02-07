@@ -5,7 +5,7 @@ const emit = defineEmits(['refresh']);
 
 const columnsLayout = inject("columnsLayout");
 
-const isMobile = () => window.innerWidth < 1024;
+const isMobile = () => window.outerWidth < 1024;
 
 const changePageLayout = (cols) => {
     if ([1, 2, 3, 4, 6].includes(cols)) {
