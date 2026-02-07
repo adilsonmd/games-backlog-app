@@ -213,15 +213,11 @@ onMounted(async () => {
         <Pagination :query="query" @pagination-changed="callListOfGames" @search="search"></Pagination>
 
 
-        <TableRoot :table-details="{
-            columns: [
-                { name: 'Título' },
-                /* { name: 'Flags' }, */
-                { name: 'Status' },
-                { name: 'Status Compra' },
-                { name: 'Plataformas' },
-                { name: 'Ações' }
-            ], data: listOfGames
-        }" :table="table" @edit-game="(game) => openEdit(game)" @sort-changed="handleSort"></TableRoot>
+        <TableRoot 
+            :data="listOfGames"
+            :table="table" 
+            @edit-game="(game) => openEdit(game)" 
+            @sort-changed="handleSort">
+        </TableRoot>
     </div>
 </template>

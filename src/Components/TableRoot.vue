@@ -4,9 +4,9 @@ import TableHeader from "./TableHeader.vue";
 
 const emit = defineEmits(['edit-game', 'sort-changed']);
 const props = defineProps({
-    'tableDetails': {
-        type: Object,
-        default: () => ({})
+    'data': {
+        type: Array,
+        default: () => ([])
     },
     'table': {
         type:  Array,
@@ -51,15 +51,9 @@ const obterClassePill = (status) => {
         <table class="w-full text-left border-collapse">
 
             <TableHeader :table="table" @sort-changed="handleSortChanged"></TableHeader>
-
-            <!-- <thead>
-                <tr class="border-b border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 text-sm">
-                    <th v-for="(column, index) in props.tableDetails.columns" class="px-4 py-2 font-medium">{{
-                        column.name }}</th>
-                </tr>
-            </thead> -->
+            
             <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                <template v-if="props.tableDetails.data === null || props.tableDetails.data.length == 0">
+                <template v-if="props.data === null || props.data.length == 0">
                     <tr>
                         <td colspan="4" class="px-4 py-3 text-center text-gray-500">
                             Nenhum jogo encontrado.
@@ -67,7 +61,7 @@ const obterClassePill = (status) => {
                     </tr>
                 </template>
 
-                <tr v-for="(game, index) in props.tableDetails.data" :key="index"
+                <tr v-for="(game, index) in props.data" :key="index"
                     class="hover:bg-gray-50 dark:hover:bg-[#1e1e1e] transition-colors">
                     <td class="px-4 py-3 font-medium">
                         <router-link :to="'/biblioteca/' + game._id">{{ game.titulo }}</router-link>
