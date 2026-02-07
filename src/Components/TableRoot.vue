@@ -1,11 +1,16 @@
 <script setup>
 import { ref } from "vue";
+import TableHeader from "./TableHeader.vue";
 
-const emit = defineEmits(['edit-game']);
+const emit = defineEmits(['edit-game', 'sort-changed']);
 const props = defineProps({
     'tableDetails': {
         type: Object,
         default: () => ({})
+    },
+    'table': {
+        type:  Array,
+        default: () => ([])
     }
 });
 
@@ -14,6 +19,9 @@ const handleEdit = (game) => {
     emit('edit-game', game);
 };
 
+const handleSortChanged = () => {
+    emit('sort-changed');
+}
 const obterClassePill = (status) => {
     if (!status)
         return 'gray-pill';
@@ -41,12 +49,15 @@ const obterClassePill = (status) => {
 <template>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
-            <thead>
+
+            <TableHeader :table="table" @sort-changed="handleSortChanged"></TableHeader>
+
+            <!-- <thead>
                 <tr class="border-b border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 text-sm">
                     <th v-for="(column, index) in props.tableDetails.columns" class="px-4 py-2 font-medium">{{
                         column.name }}</th>
                 </tr>
-            </thead>
+            </thead> -->
             <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
                 <template v-if="props.tableDetails.data === null || props.tableDetails.data.length == 0">
                     <tr>
@@ -62,12 +73,12 @@ const obterClassePill = (status) => {
                         <router-link :to="'/biblioteca/' + game._id">{{ game.titulo }}</router-link>
 
                     </td>
-                    <td class="flex py-3 px-4 gap-1">
+           <!--          <td class="flex py-3 px-4 gap-1">
                         <span v-if="game.namorada_flag" class="text-pink-500"><i class="bi bi-heart-fill"></i></span>
                         <span v-if="game.favorito_flag" class="text-yellow-500"><i class="bi bi-star-fill"></i></span>
                         <span v-if="game.statusCompra === 'Wishlist'" class=""><i
                                 class="bi bi-bag-heart-fill"></i></span>
-                    </td>
+                    </td> -->
                     <td class="px-4 py-3">
                         <span
                                 class="pill blue-pill" :class="obterClassePill(game.status)">
