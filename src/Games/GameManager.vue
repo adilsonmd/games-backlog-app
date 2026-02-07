@@ -1,7 +1,7 @@
 <script setup>
 
 import { useRoute, useRouter } from "vue-router";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, } from "vue";
 import GamesService from '@/services/GamesService';
 import Pagination from "@/Components/Pagination.vue"
 import LoadingOverlay from "@/Components/LoadingOverlay.vue";
@@ -84,7 +84,6 @@ const callListOfGames = async () => {
     try {
         isLoading.value = true;
         
-        console.log(query.value);
         changeRouteQuery(
             query.value.page, 
             query.value.orderby,
@@ -110,8 +109,6 @@ const closeModal = () => {
 
 const createGame = async (gameData) => {
     try {
-        console.log("Criando jogo: ", gameData);
-
         isLoading.value = true;
 
         if (gameData.psn_id) {
@@ -121,7 +118,6 @@ const createGame = async (gameData) => {
 
             delete gameData.psn_id;
         }
-
         await GamesService.create(gameData);
 
         // Reset form
@@ -149,7 +145,6 @@ const createGame = async (gameData) => {
 
 const editGame = async (gameData) => {
     try {
-        console.log("Editando jogo: ", gameData);
         isLoading.value = true;
         await GamesService.update(gameData._id, gameData);
 
@@ -179,16 +174,14 @@ const openEdit = (game) => {
 const handleSort = () => {
     let obj = table.value.find(x => x.sort == true);
 
-    if (obj) {
+    if (!obj) {
+        return;
+    }
 
-        query.value.orderby = obj.field;
-        query.value.direction = obj.direction;
-        
-        callListOfGames();
-    }
-    else {
-        console.log("Nada aconteceu");
-    }
+    query.value.orderby = obj.field;
+    query.value.direction = obj.direction;
+    
+    callListOfGames();
 }
 
 onMounted(async () => {
@@ -200,9 +193,6 @@ onMounted(async () => {
 
 });
 
-watch(() => query.value.page, async (newPage) => {
-    console.log("Mudou: ", query.value.page);
-});
 </script>
 <template>
     <div class="p-4">

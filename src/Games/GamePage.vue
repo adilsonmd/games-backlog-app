@@ -27,6 +27,7 @@ const getGameById = async (id) => {
 const handleImageAdded = (image) => {
     console.log("Adicionada a imagem", image);
 }
+
 const obterClassePill = (status) => {
     if (!status)
         return 'gray-pill';

@@ -25,7 +25,6 @@ const getImages = async () => {
         }
 
         images.value = response;
-        console.log("Imagens: ", images.value);
     } catch (error) {
         alert(error);
     }

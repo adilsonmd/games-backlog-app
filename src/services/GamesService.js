@@ -5,7 +5,6 @@ const baseUrl = import.meta.env.VITE_API_URL + "/games";
 class GamesService {
     
     async getAll(query) {
-        console.log("base url:", baseUrl);
         try {
             let games;
             

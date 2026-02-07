@@ -21,7 +21,6 @@ class PsnService {
             query.lastPage = response.data.data.purchasedTitlesRetrieve.pageInfo.isLast;
             query.totalCount = response.data.data.purchasedTitlesRetrieve.pageInfo.totalCount;
             
-            console.log("PsnService", query);
             return {games: games, queryReturn: query};
         }
         catch (erro) {

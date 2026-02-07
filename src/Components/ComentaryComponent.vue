@@ -14,7 +14,6 @@ const props = defineProps(['gameId']);
 const getComentarios = async () => {
     try {
         const response = await ComentarioService.getComentarios(props.gameId);
-        console.log("Comentários buscados com sucesso: ", response);
         comentarios.value = response || [];
     } catch (error) {
         console.error("Erro ao buscar comentários: ", error);
@@ -30,8 +29,6 @@ const addComment = async () => {
 
     try {
         const response = await ComentarioService.create(comentario.value);
-        console.log("Comentário adicionado com sucesso: ", response.data);
-
         // Adicionar o comentário à lista localmente
         comentarios.value.push(response.data);
     } catch (error) {

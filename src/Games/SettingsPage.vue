@@ -70,8 +70,6 @@ const syncPsn = async () => {
 
 const removeDuplicates = async() => {
     try {
-
-        console.log("Removendo");
         
         const response = await GamesService.removeDuplicate();
     }

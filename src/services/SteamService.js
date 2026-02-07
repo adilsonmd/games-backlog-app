@@ -50,7 +50,6 @@ class SteamService {
                 let games = response.data.response.games;
                 return games;
             }
-            console.log("Não encontrado", response);
             return null;
         }
         catch (erro) {
