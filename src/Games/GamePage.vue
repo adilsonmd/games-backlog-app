@@ -59,7 +59,7 @@ onMounted(async () => {
 <template>
 
     <div v-if="game" class="p-4">
-        <h2 class="text-xl font-semibold text-gray-400">Game - {{ game.titulo }}</h2>
+        <h2 class="text-3xl font-semibold">{{ game.titulo }}</h2>
 
         <section>
             
