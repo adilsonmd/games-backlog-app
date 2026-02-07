@@ -56,21 +56,28 @@ onMounted(() => {
 <template>
     <thead v-if="props.table">
         <tr class="border-b border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 text-sm">
-            <th class="cursor-pointer px-4 py-2 font-medium" v-for="col in props.table">
-                <div class="flex" @click="changeFilterDirection(col)">
-                    <div>
-                        {{ col.fieldName }}
-                    </div>
-                    <div>
-                        <span v-if="col.sort == true && col.direction == 'asc'">
-                            <i class="bi bi-arrow-down-short"></i>
-                        </span>
+            <th class=" px-4 py-2 font-medium" v-for="col in props.table">
 
-                        <span v-else-if="col.sort == true && col.direction == 'desc'">
-                            <i class="bi bi-arrow-up-short"></i>
-                        </span>
+                <template v-if="col.isAction">
+                    <div>{{ col.fieldName }}</div>
+                </template>
+                <template v-else>
+                    <div class="flex cursor-pointer" @click="changeFilterDirection(col)">
+                        <div>
+                            {{ col.fieldName }}
+                        </div>
+                        <div v-if="!col.isAction">
+                            <span v-if="col.sort == true && col.direction == 'asc'">
+                                <i class="bi bi-arrow-down-short"></i>
+                            </span>
+
+                            <span v-else-if="col.sort == true && col.direction == 'desc'">
+                                <i class="bi bi-arrow-up-short"></i>
+                            </span>
+                        </div>
                     </div>
-                </div>
+                </template>
+
             </th>
         </tr>
     </thead>

@@ -30,7 +30,7 @@ const table = ref([
     { field: 'status', fieldName: 'Status', sort: false, direction: 'asc' },
     { field: 'statusCompra', fieldName: 'Status Compra', sort: false, direction: 'asc' },
     { field: 'plataformaAdquirida', fieldName: 'Plataformas', sort: false, direction: 'asc' },
-    { field: 'Ações', fieldName: 'Plataformas', sort: false, direction: 'asc', actions: true },
+    { field: '', fieldName: 'Ações', isAction: true  },
 
 ]);
 
