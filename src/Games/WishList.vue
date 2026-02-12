@@ -22,11 +22,6 @@ const getWishlistGames = async () => {
     }
 }
 
-const OpenGameDetail = (game) => {
-    selectedGame.value = game;
-    isOpen.value = true;
-}
-
 const CloseGameDetail = () => {
     isOpen.value = false;
 }
@@ -49,12 +44,9 @@ provide("columnsLayout", columnsLayout);
 </script>
 
 <template>
-
-
     <PageLayout @refresh="getWishlistGames">
         <template #right>
-            <button @click="openCreate()"
-                class="button button-color">
+            <button @click="openCreate()" class="button button-color">
                 <i class="bi bi-plus"></i>Adicionar jogo
             </button>
         </template>

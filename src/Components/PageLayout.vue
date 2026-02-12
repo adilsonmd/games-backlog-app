@@ -30,13 +30,8 @@ onMounted(() => {
     if (!columnsLayout.value) {
         columnsLayout.value = isMobile() ? "grid-cols-1" : "grid-cols-3";
     }
-
-    window.addEventListener('resize', updateLayoutOnResize);
 });
 
-onUnmounted(() => {
-    window.removeEventListener('resize', updateLayoutOnResize);
-});
 </script>
 <template>
     <div class="flex flex-row justify-between p-4">
