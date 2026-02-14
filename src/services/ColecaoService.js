@@ -54,4 +54,4 @@ class ColecaoService {
     }
 }
 
-export default new ComentarioService();
+export default new ColecaoService();

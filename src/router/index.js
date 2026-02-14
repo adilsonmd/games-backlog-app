@@ -6,9 +6,9 @@ import LoginPage from '@/Games/LoginPage.vue'
 import GameManager from '@/Games/GameManager.vue'
 import NamoradaPage from '@/Games/NamoradaPage.vue'
 import SettingsPage from '@/Games/SettingsPage.vue'
+import CollectionPage from '@/Games/CollectionPage.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
-import SeriesPage from '@/Games/SeriesPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -52,7 +52,7 @@ const router = createRouter({
   {
     name: "Colecao",
     path: "/colecao",
-    component: SeriesPage,
+    component: CollectionPage,
     meta: { requiresAuth: true } // PRIVADO
   },
   {
