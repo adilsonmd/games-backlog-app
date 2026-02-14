@@ -8,7 +8,8 @@ const isOpen = ref(false); // Estado para o menu mobile
 
 const sidebarItens = ref([
   { path: '/play', label: 'Jogar', icon: 'bi-play-circle-fill' },
-  { path: '/biblioteca', label: 'Biblioteca', icon: 'bi-collection-play' },
+  { path: '/biblioteca', label: 'Biblioteca', icon: 'bi-book' },
+  { path: '/colecao', label: 'Coleção (Wip)', icon: 'bi-collection-play' },
   { path: '/wishlist', label: 'Wishlist', icon: 'bi-star' },
   { path: '/namorada', label: 'Area Namorada', icon: 'bi-heart' }
 ]);

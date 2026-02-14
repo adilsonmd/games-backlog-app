@@ -8,6 +8,7 @@ import NamoradaPage from '@/Games/NamoradaPage.vue'
 import SettingsPage from '@/Games/SettingsPage.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
+import SeriesPage from '@/Games/SeriesPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -46,6 +47,12 @@ const router = createRouter({
     name: "Wishlist",
     path: "/wishlist",
     component: WishList,
+    meta: { requiresAuth: true } // PRIVADO
+  },
+  {
+    name: "Colecao",
+    path: "/colecao",
+    component: SeriesPage,
     meta: { requiresAuth: true } // PRIVADO
   },
   {
