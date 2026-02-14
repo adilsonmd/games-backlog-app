@@ -1,10 +1,13 @@
 <script setup>
 import { ref, onMounted, provide } from "vue";
 import Sidebar from "./Components/Sidebar.vue";
+import QuickSearch from "./Components/QuickSearch.vue";
 </script>
 
 <template>
   <div>
+    <QuickSearch></QuickSearch>
+    
     <div class="min-h-screen bg-white dark:bg-[#121212] text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <div class="flex">
         <Sidebar></Sidebar>
