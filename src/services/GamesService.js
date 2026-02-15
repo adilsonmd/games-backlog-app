@@ -92,9 +92,15 @@ class GamesService {
         }
     }
 
-    async getPlayingGames() {
+    async getByStatus(query = null) {
         try {
-            const response = await axios.get(baseUrl + '/playing');
+            if (!query) {
+                query = {
+                    statusCompra: '',
+                    status: '',
+                }
+            }
+            const response = await axios.get(baseUrl + '/status', { params: { ...query } });
 
             if (response.status == 200)
                 return response.data;
@@ -103,6 +109,10 @@ class GamesService {
         } catch (erro) {
             console.error(erro);
         }
+    }
+
+    async getPausedGames() {
+
     }
 }
 
