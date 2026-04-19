@@ -7,7 +7,7 @@ COPY package*.json ./
 
 #RUN npm install
 # 2. Instala com menos consumo
-RUN npm ci --no-audit --no-fund
+RUN npm ci --include=dev --no-audit --no-fund
 
 COPY . .
 
