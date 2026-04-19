@@ -1,13 +1,24 @@
 # Estágio de Build - ATUALIZADO PARA NODE 22
-FROM node:22-alpine as build-stage
+# Alterando a versão de 22 para 20 pois utiliza menos memória. Meu ambiente tem apenas 1gb
+FROM node:20-alpine as build-stage
 WORKDIR /app
+
 COPY package*.json ./
-RUN npm install
+
+#RUN npm install
+# 2. Instala com menos consumo
+RUN npm ci --no-audit --no-fund
+
 COPY . .
+
+# evita estourar 1GB durante build
+ENV NODE_OPTIONS="--max-old-space-size=512"
+
 RUN npm run build
 
 # Estágio de Produção
 FROM nginx:stable-alpine as production-stage
+
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
