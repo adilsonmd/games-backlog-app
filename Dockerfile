@@ -14,7 +14,9 @@ COPY . .
 # evita estourar 1GB durante build
 ENV NODE_OPTIONS="--max-old-space-size=512"
 
-RUN npm run build
+#RUN npm run build
+# Adicionado pois está dando erro de Vite nao encontrado
+RUN ./node_modules/.bin/vite build
 
 # Estágio de Produção
 FROM nginx:stable-alpine as production-stage
