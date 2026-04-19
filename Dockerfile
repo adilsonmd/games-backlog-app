@@ -7,7 +7,10 @@ COPY package*.json ./
 
 #RUN npm install
 # 2. Instala com menos consumo
-RUN npm ci --include=dev --no-audit --no-fund
+RUN npm cache clean --force && \
+    npm install --loglevel info
+# 3. VERIFICAÇÃO: Se este comando falhar, o build para aqui e sabemos que não instalou
+RUN ls -d node_modules && ls node_modules/.bin/vite
 
 COPY . .
 
