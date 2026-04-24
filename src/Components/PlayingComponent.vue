@@ -19,7 +19,7 @@ const getSteamPlayerSummary = async () => {
         let gameId = playerData.response.players.player[0]?.steamid || null;
 
         if (gameName && gameId) {
-            if(props.game.titulo === gameName || props.game.steam_id == gameId) {
+            if(props.game.titulo.toLowerCase() === gameName.toLowerCase() || props.game.steam_id == gameId) {
                 props.game.isPlaying = true;
             }
         }
@@ -45,7 +45,7 @@ const getPsnPlayerSummary = async () => {
         let gameId = playerData.basicPresence?.gameTitleInfoList[0]?.npTitleId || null
 
         gameId = gameId.replace("_", "");
-        if (props.game.titulo === gameName || props.game.psn_id == gameId) {
+        if (props.game.titulo.toLowerCase() === gameName.toLowerCase() || props.game.psn_id == gameId) {
             props.game.isPlaying = true;
         }
 

@@ -43,44 +43,6 @@ const getDashboardData = async () => {
     }
 }
 
-
-const getSteamPlayerSummary = async () => {
-    try {
-        const playerData = await SteamService.getPlayerSummary();
-        let gameName = playerData.response.players.player[0]?.gameextrainfo || null;
-        if (gameName) {
-            validateGateInRecentGames();
-        }
-    } catch (error) {
-        console.error("Erro ao buscar dados do Steam: ", error);
-        return null;
-    }
-};
-
-const getPsnPlayerSummary = async () => {
-    try {
-        const playerData = await PsnService.getPlayerSummary();
-        let gameName = playerData.basicPresence?.gameTitleInfoList[0]?.titleName || null;
-        if (gameName) {
-           validateGateInRecentGames(gameName);
-        }
-    } catch (error) {
-        console.error("Erro ao buscar dados do PSN: ", error);
-        return null;
-    }
-};
-
-const validateGateInRecentGames = (gameName) => {
-    const normalizedGameName = gameName.toLowerCase();
-        
-    // Verifica se já existe uma versão desse nome no array (ignorando Case)
-    const exists = recentGames.value.some(game => game.toLowerCase() === normalizedGameName);
-
-    if (!exists) {
-        recentGames.value.push(gameName);
-    }
-}
-
 onMounted(async () => {
     // Aqui você chamaria sua API para preencher os dados
     // const response = await axios.get('/api/dashboard/summary');
