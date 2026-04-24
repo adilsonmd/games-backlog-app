@@ -49,8 +49,7 @@ const getSteamPlayerSummary = async () => {
         const playerData = await SteamService.getPlayerSummary();
         let gameName = playerData.response.players.player[0]?.gameextrainfo || null;
         if (gameName) {
-            if (!recentGames.value.includes(gameName))
-                recentGames.value.push(gameName);
+            validateGateInRecentGames();
         }
     } catch (error) {
         console.error("Erro ao buscar dados do Steam: ", error);
@@ -63,14 +62,24 @@ const getPsnPlayerSummary = async () => {
         const playerData = await PsnService.getPlayerSummary();
         let gameName = playerData.basicPresence?.gameTitleInfoList[0]?.titleName || null;
         if (gameName) {
-            if (!recentGames.value.includes(gameName))
-                recentGames.value.push(gameName);
+           validateGateInRecentGames(gameName);
         }
     } catch (error) {
         console.error("Erro ao buscar dados do PSN: ", error);
         return null;
     }
 };
+
+const validateGateInRecentGames = (gameName) => {
+    const normalizedGameName = gameName.toLowerCase();
+        
+    // Verifica se já existe uma versão desse nome no array (ignorando Case)
+    const exists = recentGames.value.some(game => game.toLowerCase() === normalizedGameName);
+
+    if (!exists) {
+        recentGames.value.push(gameName);
+    }
+}
 
 onMounted(async () => {
     // Aqui você chamaria sua API para preencher os dados
