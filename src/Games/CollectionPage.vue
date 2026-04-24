@@ -4,6 +4,7 @@ import { ref, onMounted } from "vue";
 import MyModal from "@/Components/MyModal.vue";
 import ProgressBar from '@/Components/ProgressBar.vue';
 import ColecaoService from "@/services/ColecaoService";
+import GameInput from "@/Components/GameInput.vue";
 
 const modal = ref({
     isOpen:false,
@@ -85,6 +86,10 @@ onMounted(async () => {
                         <template v-for="game in cc.games">
                             <div>{{ game.titulo }} - <span class="text-gray-400">{{ game.status }}</span></div>
                         </template>
+                    </div>
+
+                    <div>
+                        <GameInput></GameInput>
                     </div>
                 </section>
             </div>
