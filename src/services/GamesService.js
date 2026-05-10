@@ -38,6 +38,13 @@ class GamesService {
 
     async create(game) {
         try {
+             if (game.psn_id) {
+                delete game.steam_id;
+            }
+            if (game.steam_id) {
+                delete game.psn_id;
+            }
+
             const response = await axios.post(baseUrl, game);
             return response;
         } 

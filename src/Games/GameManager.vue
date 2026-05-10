@@ -111,13 +111,7 @@ const createGame = async (gameData) => {
     try {
         isLoading.value = true;
 
-        if (gameData.psn_id) {
-            delete gameData.steam_id;
-        }
-        if (gameData.steam_id) {
-
-            delete gameData.psn_id;
-        }
+       
         await GamesService.create(gameData);
 
         // Reset form
