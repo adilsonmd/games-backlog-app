@@ -62,32 +62,19 @@ const router = createRouter({
   },
 ],
 });
-let isUserAuthenticated = false;
-router.beforeEach(async (to, from, next) => {
-  // Se a rota exige autenticação
-  if (to.meta.requiresAuth) {
-    
-    // Se já validamos a sessão nesta carga de página, deixa passar direto
-    if (isUserAuthenticated) {
-      return next();
-    }
 
-    try {
-      // Pergunta para a sua API Node.js (que está protegida pelo Authelia) quem é o usuário.
-      // Lembre-se de configurar a rota '/me' no seu backend para retornar os headers do Authelia!
-      await axios.get('https://api.athomushub.com.br/auth');
-      
-      // Se a API respondeu 200 OK, o usuário está logado no Authelia
-      isUserAuthenticated = true;
-      next();
-    } catch (error) {
-      // Se der 401/403, o interceptor do main.js já vai disparar o redirecionamento para o Authelia.
-      // O 'next(false)' abaixo apenas cancela a navegação local no Vue enquanto a página recarrega.
-      next(false);
-    }
+// Guardião simples e rápido (sem travar a renderização)
+router.beforeEach((to, from, next) => {
+  // Pegamos a flag de autenticação que vamos salvar na janela global
+  const isAuthenticated = window.__USER_LOGGED_IN__ === true;
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    // Se a rota exige login e a flag está falsa, manda para o Authelia
+    const currentUrl = window.location.href;
+    window.location.href = `https://auth.athomushub.com.br/?rd=${encodeURIComponent(currentUrl)}`;
   } else {
-    // Se a rota for pública, deixa passar
     next();
   }
 });
+
 export default router
