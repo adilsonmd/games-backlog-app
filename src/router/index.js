@@ -63,23 +63,31 @@ const router = createRouter({
 ],
 });
 
-// router/index.js
-router.beforeEach((to, from, next) => {
-   if (to.meta.requiresAuth) {
-    // 1. Em vez de localStorage, você pode checar um estado global (Pinia/Vuex) 
-    // que guarda se o perfil do usuário foi carregado com sucesso pela API.
-    const isUserLoaded = checkUserSessionInStore(); 
-
-    if (!isUserLoaded) {
-      // 2. Se a aplicação não achou os dados do usuário, redireciona o NAVEGADOR
-      // para o Authelia externo, passando a URL atual como retorno (rd)
-      const currentUrl = window.location.href;
-      window.location.href = `https://auth.athomushub.com.br/?rd=${encodeURIComponent(currentUrl)}`;
-      return; // Interrompe o fluxo do Vue Router
+router.beforeEach(async (to, from, next) => {
+  // Se a rota exige autenticação
+  if (to.meta.requiresAuth) {
+    
+    // Se já validamos a sessão nesta carga de página, deixa passar direto
+    if (isUserAuthenticated) {
+      return next();
     }
-  }
-  
-  next();
-});
 
+    try {
+      // Pergunta para a sua API Node.js (que está protegida pelo Authelia) quem é o usuário.
+      // Lembre-se de configurar a rota '/me' no seu backend para retornar os headers do Authelia!
+      await axios.get('https://api.athomushub.com.br/auth');
+      
+      // Se a API respondeu 200 OK, o usuário está logado no Authelia
+      isUserAuthenticated = true;
+      next();
+    } catch (error) {
+      // Se der 401/403, o interceptor do main.js já vai disparar o redirecionamento para o Authelia.
+      // O 'next(false)' abaixo apenas cancela a navegação local no Vue enquanto a página recarrega.
+      next(false);
+    }
+  } else {
+    // Se a rota for pública, deixa passar
+    next();
+  }
+});
 export default router
