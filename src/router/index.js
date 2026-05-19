@@ -2,7 +2,6 @@ import GamePage from '@/Games/GamePage.vue'
 import PlayGame from '@/Games/PlayGame.vue'
 import WishList from '@/Games/WishList.vue'
 import HomePage from '@/Games/HomePage.vue'
-import LoginPage from '@/Games/LoginPage.vue'
 import GameManager from '@/Games/GameManager.vue'
 import NamoradaPage from '@/Games/NamoradaPage.vue'
 import SettingsPage from '@/Games/SettingsPage.vue'
@@ -13,12 +12,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-  // {
-  //   name: "LoginPage",
-  //   path: "/login",
-  //   component: LoginPage,
-  //   meta: { requiresAuth: false } // Público
-  // }, 
   {
     name: "HomePage",
     path: "/",

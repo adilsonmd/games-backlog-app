@@ -1,5 +1,4 @@
 <script setup>
-import { ref, onMounted, provide } from "vue";
 import Sidebar from "./Components/Sidebar.vue";
 import QuickSearch from "./Components/QuickSearch.vue";
 </script>
