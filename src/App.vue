@@ -7,7 +7,7 @@ const router = useRouter();
 onMounted(async () => {
   try {
     // Dispara a chamada para a sua API protegida
-    const response = await axios.get('https://api.athomushub.com.br/me');
+    const response = await axios.get('https://api.athomushub.com.br/auth');
     
     // Se deu sucesso, seta a flag global que o router vai ler
     window.__USER_LOGGED_IN__ = true;
