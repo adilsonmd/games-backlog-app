@@ -62,7 +62,7 @@ const router = createRouter({
   },
 ],
 });
-
+let isUserAuthenticated = false;
 router.beforeEach(async (to, from, next) => {
   // Se a rota exige autenticação
   if (to.meta.requiresAuth) {
