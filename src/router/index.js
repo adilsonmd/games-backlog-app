@@ -13,12 +13,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-  {
-    name: "LoginPage",
-    path: "/login",
-    component: LoginPage,
-    meta: { requiresAuth: false } // Público
-  }, 
+  // {
+  //   name: "LoginPage",
+  //   path: "/login",
+  //   component: LoginPage,
+  //   meta: { requiresAuth: false } // Público
+  // }, 
   {
     name: "HomePage",
     path: "/",
@@ -72,14 +72,21 @@ const router = createRouter({
 
 // router/index.js
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = !!localStorage.getItem('token');
-    
-    // Se a rota exige login e o usuário não está logado
-    if (to.meta.requiresAuth && !isAuthenticated) {
-        next('/login');
-    } else {
-        next();
+   if (to.meta.requiresAuth) {
+    // 1. Em vez de localStorage, você pode checar um estado global (Pinia/Vuex) 
+    // que guarda se o perfil do usuário foi carregado com sucesso pela API.
+    const isUserLoaded = checkUserSessionInStore(); 
+
+    if (!isUserLoaded) {
+      // 2. Se a aplicação não achou os dados do usuário, redireciona o NAVEGADOR
+      // para o Authelia externo, passando a URL atual como retorno (rd)
+      const currentUrl = window.location.href;
+      window.location.href = `https://auth.athomushub.com.br/?rd=${encodeURIComponent(currentUrl)}`;
+      return; // Interrompe o fluxo do Vue Router
     }
+  }
+  
+  next();
 });
 
 export default router

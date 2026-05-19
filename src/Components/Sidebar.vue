@@ -2,7 +2,6 @@
 import { ref } from 'vue'; // Importar ref
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
-const router = useRouter();
 
 const isOpen = ref(false); // Estado para o menu mobile
 
@@ -18,8 +17,11 @@ const isActive = (path) => route.path === path;
 const isLogedIn = () => !!localStorage.getItem('token');
 
 const handleLogout = () => {
-  localStorage.removeItem('token');
-  router.push('/login');
+  // Limpa a store local do Vue (Pinia) se houver
+  userStore.$reset();
+
+  // Redireciona para o Authelia limpar o cookie de sessão do navegador
+  window.location.href = 'https://auth.athomushub.com.br/logout';
 };
 
 // Fecha o menu ao clicar em um link (útil no mobile)
