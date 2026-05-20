@@ -11,12 +11,21 @@ app.use(router)
 axios.defaults.withCredentials = true;
 
 axios.interceptors.response.use(
-  response => response,
+  (response) => {
+    return response;
+  },
   error => {
+    // Se a API retornar 401 (bloqueada pelo Authelia no Nginx)
     if (error.response && error.response.status === 401) {
-      // O Authelia limpou a sessão. Redireciona o topo do navegador para a tela de login
-      window.location.href = `https://auth.athomushub.com.br/?rd=${encodeURIComponent(window.location.href)}`;
+      console.warn('Sessão expirada no Authelia. Redirecionando para login...');
+      
+      // Captura a URL exata onde o usuário está agora para que o Authelia retorne para ela depois
+      const currentUrl = window.location.href;
+      
+      // Redireciona a janela inteira do navegador de forma limpa para a tela do Authelia
+      window.location.href = `https://auth.athomushub.com.br/?rd=${encodeURIComponent(currentUrl)}`;
     }
+    
     return Promise.reject(error);
   }
 );
