@@ -14,12 +14,8 @@ const sidebarItens = ref([
 ]);
 
 const isActive = (path) => route.path === path;
-const isLogedIn = () => !!localStorage.getItem('token');
 
 const handleLogout = () => {
-  // Limpa a store local do Vue (Pinia) se houver
-  userStore.$reset();
-
   // Redireciona para o Authelia limpar o cookie de sessão do navegador
   window.location.href = 'https://auth.athomushub.com.br/logout';
 };
@@ -74,14 +70,11 @@ const closeSidebar = () => { isOpen.value = false; };
         <span class="text-sm font-medium">Configurações</span>
       </router-link>
 
-      <template v-if="isLogedIn()">
-
-        <button @click="handleLogout"
-          class="flex items-center gap-3 px-3 py-2 rounded-md text-gray-500 hover:bg-red-500/10 hover:text-red-400 transition-all group border-none bg-transparent cursor-pointer text-left w-full">
-          <i class="bi bi-box-arrow-right text-gray-500 group-hover:text-red-400"></i>
-          <span class="text-sm font-medium">Sair da conta</span>
-        </button>
-      </template>
+      <button @click="handleLogout"
+        class="flex items-center gap-3 px-3 py-2 rounded-md text-gray-500 hover:bg-red-500/10 hover:text-red-400 transition-all group border-none bg-transparent cursor-pointer text-left w-full">
+        <i class="bi bi-box-arrow-right text-gray-500 group-hover:text-red-400"></i>
+        <span class="text-sm font-medium">Sair da conta</span>
+      </button>
     </div>
   </nav>
 </template>
