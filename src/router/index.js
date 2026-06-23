@@ -13,6 +13,12 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
   {
+    name: "LoginPage",
+    path: "/login",
+    component: LoginPage,
+    meta: { requiresAuth: false } // Público
+  }, 
+  {
     name: "HomePage",
     path: "/",
     component: HomePage,

@@ -2,6 +2,7 @@
 import { ref } from 'vue'; // Importar ref
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
+const router = useRouter();
 
 const isOpen = ref(false); // Estado para o menu mobile
 
@@ -16,8 +17,8 @@ const sidebarItens = ref([
 const isActive = (path) => route.path === path;
 
 const handleLogout = () => {
-  // Redireciona para o Authelia limpar o cookie de sessão do navegador
-  window.location.href = 'https://auth.athomushub.com.br/logout';
+  localStorage.removeItem('token');
+  router.push('/login');
 };
 
 // Fecha o menu ao clicar em um link (útil no mobile)
