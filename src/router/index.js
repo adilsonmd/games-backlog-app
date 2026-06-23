@@ -1,3 +1,4 @@
+import LoginPage from '@/LoginPage.vue'
 import GamePage from '@/Games/GamePage.vue'
 import PlayGame from '@/Games/PlayGame.vue'
 import WishList from '@/Games/WishList.vue'
