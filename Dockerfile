@@ -25,5 +25,9 @@ RUN ./node_modules/.bin/vite build
 FROM nginx:stable-alpine as production-stage
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# Adicionado pois quando aperto F5 na pagina ele da 404. 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
