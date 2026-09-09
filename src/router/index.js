@@ -9,6 +9,7 @@ import SettingsPage from '@/Games/SettingsPage.vue'
 import CollectionPage from '@/Games/CollectionPage.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
+import TimeLinePage from '@/Games/TimeLine/TimeLinePage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -53,6 +54,11 @@ const router = createRouter({
     name: "Namorada",
     path: "/namorada",
     component: NamoradaPage,
+  },
+  {
+    name: "Timeline",
+    path: "/timeline",
+    component: TimeLinePage    
   },
   {
     name: "SettingsPage",

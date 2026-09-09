@@ -4,6 +4,8 @@ import MyModal from "@/Components/MyModal.vue";
 import GamesService from '@/services/GamesService';
 import IGDBService from "@/services/IGDBService";
 
+import platforms from "@/Helpers/PlatformsEnum";
+
 const props = defineProps({
     'isOpen': Boolean,
     'title': { type: String, default: 'Criar Jogo' },
@@ -30,6 +32,7 @@ const newGame = ref({
     titulo: '',
     statusCompra: 'Wishlist',
     status: 'Backlog',
+    lancamento: '',
     horasJogadas: 0,
     plataformaAdquirida: [],
     midiaDigital: false,
@@ -53,7 +56,11 @@ const handleClose = () => {
 const getGameDetails = async () => {
     try {
         const gameDetails = await GamesService.getById(props.gameId);
-        newGame.value = { ...gameDetails };
+
+        const dataFormatada = gameDetails?.lancamento ? String(gameDetails.lancamento).split("T")[0] : "";
+
+        newGame.value = { ...gameDetails, lancamento: dataFormatada};
+
     } catch (error) {
         console.log("Erro ao buscar detalhes do jogo: ", error);
     }
@@ -115,6 +122,7 @@ watch(() => props.isOpen, (newVal) => {
             titulo: '',
             statusCompra: 'Wishlist',
             status: 'Backlog',
+            lancamento: '',
             horasJogadas: 0,
             plataformaAdquirida: [],
             midiaDigital: false,
@@ -200,6 +208,11 @@ watch(() => props.isOpen, (newVal) => {
                     </select>
                 </div>
                 <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Lançamento</label>
+                    <input v-model="newGame.lancamento" type="date"
+                        class="bg-[#252525] border border-gray-700 rounded-md px-3 py-2 text-sm text-gray-200 focus:border-blue-500 outline-none transition-all">
+                </div>
+                <div class="flex flex-col gap-1.5">
                     <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Horas
                         Jogadas</label>
                     <input v-model.number="newGame.horasJogadas" type="number"
@@ -210,7 +223,7 @@ watch(() => props.isOpen, (newVal) => {
                     <label class="text-[11px] uppercase tracking-wider text-gray-500 font-bold ml-1">Plataformas
                         Adquiridas</label>
                     <div class="flex flex-wrap gap-2">
-                        <label v-for="plat in ['PS4', 'PS5', 'PC', 'SWITCH']" :key="plat" class="cursor-pointer">
+                        <label v-for="plat in platforms" :key="plat" class="cursor-pointer">
                             <input type="checkbox" :value="plat" v-model="newGame.plataformaAdquirida"
                                 class="hidden peer">
                             <div
@@ -276,10 +289,6 @@ watch(() => props.isOpen, (newVal) => {
         <slot>
             <div class="p-4">
                 <!-- Conteúdo do modal IGDB aqui -->
-
-                <!-- <div class="panel">
-                    <code rows="200" disabled>{{ JSON.stringify(igdbGames) }}</code>
-                </div> -->
 
                 <template v-if="igdbGames && igdbGames.length > 0">
                     <ul>

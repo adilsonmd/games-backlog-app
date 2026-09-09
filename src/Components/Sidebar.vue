@@ -11,6 +11,7 @@ const sidebarItens = ref([
   { path: '/biblioteca', label: 'Biblioteca', icon: 'bi-book' },
   { path: '/colecao', label: 'Coleção (Wip)', icon: 'bi-collection-play' },
   { path: '/wishlist', label: 'Wishlist', icon: 'bi-star' },
+  { path: '/timeline', label: 'Timeline', icon: 'bi-heart' },
   { path: '/namorada', label: 'Area Namorada', icon: 'bi-heart' }
 ]);
 
