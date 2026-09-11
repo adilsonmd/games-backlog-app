@@ -121,6 +121,19 @@ class GamesService {
     async getPausedGames() {
 
     }
+
+    async getTimelineGames() {
+        try {
+            const response = await axios.get(baseUrl + '/timeline');
+
+            if (response?.status == 200)
+                return response.data;
+
+            return null;
+        } catch (erro) {
+            console.error(erro);
+        }
+    }
 }
 
 export default new GamesService();

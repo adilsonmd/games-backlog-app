@@ -1,22 +1,31 @@
 <script setup>
-import { ref } from 'vue'
+import GamesService from '@/services/GamesService';
+import { ref, onMounted } from 'vue'
 
-// Propriedades ou dados reativos para os itens da timeline
-const props = defineProps({
-  items: {
-    type: Array,
-    default: () => [
-      { id: 1, title: 'Fire Emblem Fortune\'s Weave', description: 'Lançamento 17/09/2026', active: true },
-      { id: 2, title: 'Legend of Zelda', description: 'Lançamento 05/11/2026', active: false },
-      { id: 3, title: 'Danganronpa 2x2', description: 'Lançamento 14/01/2027', active: false },
-      { id: 4, title: 'Fate Extra Record', description: 'Lançamento 28/01/2027', active: false },
-      { id: 5, title: 'Persona 4 Revival', description: 'Lançamento 20/02/2027', active: false },
-      { id: 6, title: 'Final Fantasy VII Revelation', description: 'Lançamento 08/04/2027', active: false },
-    ]
+
+const items = ref([]) ;
+
+const getTimelineGames = async() => {
+  const response = await GamesService.getTimelineGames();
+
+  if (response == null)
+  {
+    alert("Não encontrei os games");
+    return;
   }
-})
+    
+  items.value = response.map(({ titulo, lancamento }) => ({
+    title: titulo,
+    description: lancamento,
+    active: false
+  }));
 
-const timelineContainer = ref(null)
+}
+
+onMounted(async () => {
+  getTimelineGames();
+});
+
 </script>
 
 <template>
@@ -39,7 +48,7 @@ const timelineContainer = ref(null)
         <!-- Itens da Timeline em linha -->
         <div
           v-for="item in items"
-          :key="item.id"
+          :key="item.titulo"
           class="relative flex flex-col items-center z-20 shrink-0"
         >
           <!-- Traço Vertical -->
