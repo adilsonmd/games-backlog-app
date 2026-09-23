@@ -7,6 +7,7 @@ import Pagination from "@/Components/Pagination.vue"
 import LoadingOverlay from "@/Components/LoadingOverlay.vue";
 import CreateGame from "./GameManager/CreateGame.vue";
 import TableRoot from "@/Components/TableRoot.vue";
+
 const route = useRoute();
 const router = useRouter();
 
@@ -178,6 +179,13 @@ const handleSort = () => {
     callListOfGames();
 }
 
+// Chamada para remover o jogo do sistema
+const removeGame = async (gameId) => {
+    const response = await GamesService.remove(gameId);
+
+    callListOfGames();
+}
+
 onMounted(async () => {
     query.value.page = Number(route.query.page ?? 0) || 0;
     query.value.orderby = route.query.orderby ?? "titulo";
@@ -211,7 +219,9 @@ onMounted(async () => {
             :data="listOfGames"
             :table="table" 
             @edit-game="(game) => openEdit(game)" 
-            @sort-changed="handleSort">
+            @sort-changed="handleSort"
+            @remove-game="(game) => removeGame(game)"
+            >
         </TableRoot>
     </div>
 </template>

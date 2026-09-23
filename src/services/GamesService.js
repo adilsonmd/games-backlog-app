@@ -63,6 +63,17 @@ class GamesService {
         }
     }
 
+    async remove(id) {
+        try {
+            const response = await axios.delete(baseUrl + `/${id}`);
+
+            console.log(response);
+        }
+        catch (erro) {
+            console.error(erro);
+        }
+    }
+
     async getWishlist() {
         try {
             const response = await axios.get(baseUrl + `/wishlist/`);

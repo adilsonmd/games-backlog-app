@@ -1,8 +1,14 @@
 <script setup>
 import { ref } from "vue";
 import TableHeader from "./TableHeader.vue";
+import MyModal from "./MyModal.vue";
 
-const emit = defineEmits(['edit-game', 'sort-changed']);
+const emit = defineEmits(['edit-game', 'remove-game', 'sort-changed']);
+
+const isOpen = ref(false);
+
+const selectedGame = ref(null);
+
 const props = defineProps({
     'data': {
         type: Array,
@@ -17,6 +23,24 @@ const props = defineProps({
 const handleEdit = (game) => {
     // Lógica para editar o jogo
     emit('edit-game', game);
+};
+
+const handleRemove = (game) => {
+    isOpen.value = false;
+    emit('remove-game', game);
+};
+
+const toggleSelectGameToRemove = (game, isRemoving = true) => {
+
+    if (isRemoving) {
+        selectedGame.value = game._id;
+        isOpen.value = true;
+    }
+    else {
+        selectedGame.value = null;
+        isOpen.value = false;
+    }
+
 };
 
 const handleSortChanged = () => {
@@ -67,12 +91,6 @@ const obterClassePill = (status) => {
                         <router-link :to="'/biblioteca/' + game._id">{{ game.titulo }}</router-link>
 
                     </td>
-           <!--          <td class="flex py-3 px-4 gap-1">
-                        <span v-if="game.namorada_flag" class="text-pink-500"><i class="bi bi-heart-fill"></i></span>
-                        <span v-if="game.favorito_flag" class="text-yellow-500"><i class="bi bi-star-fill"></i></span>
-                        <span v-if="game.statusCompra === 'Wishlist'" class=""><i
-                                class="bi bi-bag-heart-fill"></i></span>
-                    </td> -->
                     <td class="px-4 py-3">
                         <span
                                 class="pill blue-pill" :class="obterClassePill(game.status)">
@@ -109,11 +127,16 @@ const obterClassePill = (status) => {
                         </div>
                     </td>
 
-                    <td class="px-4 py-3 text-gray-500">
+                    <td class="px-4 py-3 text-gray-500 m-3">
                         <button class="cursor-pointer" @click="handleEdit(game)"><i class="bi bi-pencil"></i></button>
+                        <button class="cursor-pointer" @click="toggleSelectGameToRemove(game, true)"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <MyModal title="Confirmar exclusão?" :is-open="isOpen" @confirm="handleRemove(selectedGame)" @close="toggleSelectGameToRemove(null, false)">
+        <p>Deseja remover esse jogo? ❌🗑️</p>
+    </MyModal>
 </template>
