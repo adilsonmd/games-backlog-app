@@ -123,6 +123,9 @@ const obterClassePill = (status) => {
                                 <span v-if="plataforma == 'SWITCH'">
                                     <i class="bi bi-nintendo-switch"></i>
                                 </span>
+                                <span v-if="plataforma == 'SWITCH2'">
+                                    <i class="bi bi-nintendo-switch text-red-500"></i>
+                                </span>
                             </template>
                         </div>
                     </td>
