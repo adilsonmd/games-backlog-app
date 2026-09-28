@@ -2,6 +2,9 @@
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 
+import statusGameplay from "@/Helpers/StatusGameplayEnum";
+import statusCompra from "@/Helpers/StatusCompraEnum";
+
 import GamesService from '@/services/GamesService';
 
 import ComentaryComponent from "@/Components/ComentaryComponent.vue";
@@ -12,6 +15,21 @@ const route = useRoute();
 
 const game = ref(null);
 
+const selectStatusOpen = ref(false);
+const statusGameplaySelected = ref(null);
+
+
+const handleStatusChange = async (status) => {
+    try {
+        game.value.status = status;
+
+        const response = await GamesService.update(game.value._id, game.value);
+    }
+    finally {
+        statusGameplaySelected.value = null;
+        selectStatusOpen.value = false;
+    }
+}
 const getGameById = async (id) => {
     try {
         const response = await GamesService.getById(id);
@@ -21,37 +39,40 @@ const getGameById = async (id) => {
     catch (error) {
         alert(error);
     }
+}
 
+const toggleSelectGameStatus = () => {
+    selectStatusOpen.value = !selectStatusOpen.value;
 }
 
 const handleImageAdded = (image) => {
     console.log("Adicionada a imagem", image);
 }
 
+const obterLista = () => {
+    const obj = Object.keys(statusGameplay);
+
+    return obj;
+}
+
 const obterClassePill = (status) => {
     if (!status)
         return 'gray-pill';
 
-    if (status === "Backlog")
-        return 'gray-pill'
-    else if (status === "Jogando")
-        return 'blue-pill';
-    else if (status === "Finalizado")
-        return 'green-pill';
-    else if (status === "Pausado")
-        return 'gray-pill';
-    else if (status == 'Cancelado')
-        return 'red-pill'
-    else if (status == 'Wishlist')
-        return 'gray-pill'
-    else if (status == 'Pré-venda')
-        return 'blue-pill'
-    else if (status == 'Adquirido')
-        return 'green-pill'
+    // Status gameplay
+    let returnStatus = statusGameplay[status];
+    if (returnStatus)
+        return returnStatus;
+
+    // Status compra
+    let returnStatusCompra = statusCompra[status];
+    if (returnStatusCompra)
+        return returnStatusCompra;
+
     return 'gray-pill';
 }
-onMounted(async () => {
 
+onMounted(async () => {
     await getGameById(route.params.id);
 })
 </script>
@@ -62,7 +83,7 @@ onMounted(async () => {
         <h2 class="text-3xl font-semibold">{{ game.titulo }}</h2>
 
         <section>
-            
+
             <div class="flex flex-row">
                 <div class="my-4 flex flex-col gap-4">
 
@@ -110,8 +131,7 @@ onMounted(async () => {
                             <span>Aquisição</span>
                         </div>
                         <div class="flex">
-                            <span
-                                class="pill" :class="obterClassePill(game.statusCompra)">
+                            <span class="pill" :class="obterClassePill(game.statusCompra)">
                                 <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
                                 {{ game.statusCompra }}
                             </span>
@@ -124,12 +144,33 @@ onMounted(async () => {
                             <span>Conclusão</span>
                         </div>
                         <div class="flex">
-                            <span
-                                class="pill" :class="obterClassePill(game.status)">
+                            <button @click="toggleSelectGameStatus()" class="pill cursor-pointer"
+                                :class="obterClassePill(game.status)">
                                 <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
                                 {{ game.status || 'Não iniciei' }}
-                            </span>
+                            </button>
                         </div>
+
+                        <!--ALTERACAO AQUI: -->
+                        <template v-if="selectStatusOpen">
+                            <div class="flex items-center gap-2 p-4">
+
+                                <select
+                                    v-model="statusGameplaySelected"
+                                    class="bg-zinc-900 text-zinc-200 border border-zinc-700/60 rounded-md px-3 py-1.5 text-sm outline-none focus:border-zinc-500 cursor-pointer">
+                                    <option v-for="st in obterLista()" :value="st"
+                                        class="bg-zinc-900 text-zinc-200 py-1">
+                                        {{ st }}
+                                    </option>
+                                </select>
+
+                                <button @click="handleStatusChange(statusGameplaySelected)" class="pill green-pill px-3 py-1.5 text-sm rounded-md cursor-pointer">
+                                    Gravar
+                                </button>
+
+                            </div>
+                        </template>
+                        <!-- FIM DA ALTERACAO -->
                     </div>
 
                 </div>
