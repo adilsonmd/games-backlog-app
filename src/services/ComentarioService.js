@@ -9,8 +9,7 @@ class ComentarioService {
             const response = await axios.get(baseUrl + "/" + gameId);
             
             return response.data;
-        }
-        catch (erro) {
+        } catch (erro) {
             console.error(erro);
         }
     }
@@ -19,18 +18,23 @@ class ComentarioService {
         try {
             const response = await axios.post(baseUrl, comentario);
             return response;
-        } 
-        catch (erro) {
+        } catch (erro) {
             console.error(erro);
         }
     }
-
+    async update(id, comentario) {
+        try {
+            const response = await axios.put(baseUrl + `/{${id}`, comentario);
+            return response;
+        } catch (erro) {
+            console.error(erro);
+        }
+    }
     async delete(id) {
         try {
             const response = await axios.delete(baseUrl + `/${id}`);
             return response;
-        }
-        catch (erro) {
+        } catch (erro) {
             console.error(erro);
         }
     }
